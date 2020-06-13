@@ -1,6 +1,6 @@
 import React from 'react'
 import { View,Text,ImageBackground,StyleSheet } from 'react-native'
-import { FontAwesome, Entypo,MaterialIcons }  from '@expo/vector-icons'
+import { Entypo,MaterialIcons }  from '@expo/vector-icons'
 
 const image = { uri: "https://reactjs.org/logo-og.png" }
 
@@ -10,13 +10,32 @@ const BigVideoPreview = () => {
             <ImageBackground source={image} style={styles.image}>
                 <Text style={styles.text}>Play</Text>
             </ImageBackground>
+
             <View style={styles.description}>
-                <Text>Lorem ipsum dolor sit amet, consectetur</Text>
-                <Text style={styles.details}>
-                    <Text style={styles.numbers}><Entypo name="heart" size={20} color="blue" />1609</Text>
-                    <Text style={styles.numbers}><MaterialIcons name="chat" size={20} color="black" />120</Text>
-                </Text>
+                <View style={styles.details}>
+                    <Text style={{width: '70%', fontWeight: '300',}}
+                                numberOfLines={2}>
+                        Lorem ipsum dolor sit amet, consectetur olor sit amet, consectetur </Text>
+                    <View style={styles.numbers}>
+                        <Entypo name="heart" size={18} color="blue" 
+                            style={{paddingHorizontal:1,}}/>
+                        <Text style={{fontWeight: '300'}}> 1609</Text>
+                        <MaterialIcons name="chat" size={18} color="black" 
+                            style={{paddingHorizontal:6,}}/>
+                        <Text style={{fontWeight: '300'}}>120</Text>
+                    </View>
+                </View>
+
+                <View style={styles.poddetails}>
+                    <Text style={styles.nums}>Pod ipsum dolor</Text>
+                    <Text style={{paddingVertical: 2,}}>
+                        <Text style={styles.nums}> 4.9M views </Text>
+                        <Text> - </Text>
+                        <Text style={styles.nums}> 5 Days Ago </Text>
+                    </Text>
+                </View>
             </View>
+           
         </View>
     )
 }
@@ -25,35 +44,52 @@ export default BigVideoPreview
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      flexDirection: "column",
-      height: 250
+        flex: 1,
+        flexDirection: "column",
     },
     image: {
-      flex: 1,
       resizeMode: "cover",
-      justifyContent: "center"
+      justifyContent: "center",
+      flex: 1,
     },
     text: {
-      color: "grey",
-      fontSize: 30,
-      fontWeight: "bold",
-      alignItems: 'center'
+        color: "grey",
+        fontSize: 30,
+        fontWeight: "bold",
+    },
+    description:{
+        paddingVertical: 10,
+        display: 'flex',
+        flexDirection: 'column',
+        flexWrap: 'nowrap',
+        bottom: 0,
+        position: 'absolute',
+        flex: 1,
+    },
+    details: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flexWrap: 'nowrap',
     },
     numbers: {
         fontSize:15,
         display: 'flex',
-        alignItems: 'stretch',
-        paddingHorizontal: 0
-    },
-    details: {
-        display: 'flex'
-    },
-    description:{
-        paddingVertical: 15,
-        display: 'flex',
         flexDirection: 'row',
         flexWrap: 'nowrap',
-        justifyContent: 'space-between'
+    },
+    poddetails: {
+        fontWeight: '100',
+        fontSize: 40,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '70%',
+        paddingVertical: 5,
+        alignItems: 'center',
+    },
+    nums:{
+        fontWeight: '200',
+        fontSize: 12,
     }
   });
