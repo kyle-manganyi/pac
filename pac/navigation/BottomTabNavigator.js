@@ -6,6 +6,8 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import carousel from '../components/carousel/carousel'
 
+import ExploreScreen from '../screens/ExploreScreen'
+
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
 
@@ -19,7 +21,7 @@ export default function BottomTabNavigator({ navigation, route }) {
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
       <BottomTab.Screen
         name="Home"
-        component={ExploreScreen}
+        component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="home" />,
         }}

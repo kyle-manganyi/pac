@@ -7,35 +7,37 @@ const image = { uri: "https://reactjs.org/logo-og.png" }
 const BigVideoPreview = () => {
     return (
         <View style={styles.container}>
-            <ImageBackground source={image} style={styles.image}>
-                <Text style={styles.text}>Play</Text>
-            </ImageBackground>
+            <View style={styles.topview}>
+                <ImageBackground source={image} style={styles.image}>
+                    <Text style={styles.text}>Play</Text>
+                </ImageBackground>
+            </View>
 
-            <View style={styles.description}>
-                <View style={styles.details}>
-                    <Text style={{width: '70%', fontWeight: '300',}}
-                                numberOfLines={2}>
-                        Lorem ipsum dolor sit amet, consectetur olor sit amet, consectetur </Text>
-                    <View style={styles.numbers}>
-                        <Entypo name="heart" size={18} color="blue" 
-                            style={{paddingHorizontal:1,}}/>
-                        <Text style={{fontWeight: '300'}}> 1609</Text>
-                        <MaterialIcons name="chat" size={18} color="black" 
-                            style={{paddingHorizontal:6,}}/>
-                        <Text style={{fontWeight: '300'}}>120</Text>
+                <View style={styles.description}>
+                    <View style={styles.details}>
+                        <Text style={{width: '70%', fontWeight: '300',}}
+                                    numberOfLines={2}>
+                            Lorem ipsum dolor sit amet, consectetur olor sit amet, consectetur 
+                        </Text>
+                        <View style={styles.numbers}>
+                            <Entypo name="heart" size={18} color="blue" 
+                                style={{paddingHorizontal:1,}}/>
+                            <Text style={{fontWeight: '300'}}> 1609</Text>
+                            <MaterialIcons name="chat" size={18} color="black" 
+                                style={{paddingHorizontal:6,}}/>
+                            <Text style={{fontWeight: '300'}}>120</Text>
+                        </View>
                     </View>
-                </View>
 
-                <View style={styles.poddetails}>
-                    <Text style={styles.nums}>Pod ipsum dolor</Text>
-                    <Text style={{paddingVertical: 2,}}>
-                        <Text style={styles.nums}> 4.9M views </Text>
-                        <Text> - </Text>
-                        <Text style={styles.nums}> 5 Days Ago </Text>
+                    <View style={styles.poddetails}>
+                        <Text style={styles.nums}>Pod ipsum dolor</Text>
+                        <Text style={{paddingVertical: 2,}}>
+                            <Text style={styles.nums}> 4.9M views </Text>
+                            <Text> - </Text>
+                            <Text style={styles.nums}> 5 Days Ago </Text>
                     </Text>
                 </View>
             </View>
-           
         </View>
     )
 }
@@ -46,25 +48,28 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
+        height: '100%'
+    },
+    topview: {
+        height: '100%',
+        flex: 5
     },
     image: {
       resizeMode: "cover",
       justifyContent: "center",
-      flex: 1,
     },
     text: {
         color: "grey",
         fontSize: 30,
         fontWeight: "bold",
+        height: '100%'
     },
     description:{
-        paddingVertical: 10,
+        paddingVertical: 14,
         display: 'flex',
         flexDirection: 'column',
         flexWrap: 'nowrap',
-        bottom: 0,
-        position: 'absolute',
-        flex: 1,
+        flex: 1
     },
     details: {
         display: 'flex',

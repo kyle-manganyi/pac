@@ -2,11 +2,12 @@ import * as React from 'react'
 import { View, Text ,StyleSheet, ScrollView } from 'react-native'
 import { Entypo,FontAwesome }  from '@expo/vector-icons'
 
-import BigVideoPreview from '../BigVideoPreview/BigVideoPreview'
+import BigScrollList from '../BigScrollList/BigScrollList'
+import SmallScrollList from '../SmallScrollList/SmallScrollList'
 
 const EpisodeListBig = () => {
     return (
-        <View>
+        <View style={{flex: 1}}>
             <View style={styles.alleps}>
                 <Text style={{fontWeight: '300',}}>
                     All Episodes
@@ -17,15 +18,8 @@ const EpisodeListBig = () => {
                 </View>
             </View>
 
-            <ScrollView >
-                <View>
-                    <BigVideoPreview style={{paddingVertical: 18}}/>
-                </View>
-                <BigVideoPreview />
-                {/* <BigVideoPreview />
-                <BigVideoPreview />
-                <BigVideoPreview /> */}
-            </ScrollView>
+            {/* <BigScrollList style={{flex:1}}/> */}
+            <SmallScrollList style={{flex:1}} />
         </View>
     )
 }
@@ -42,5 +36,10 @@ const styles = StyleSheet.create({
     gridformat: {
         display: 'flex',
         flexDirection: 'row',
+        // flex: 6
+    },
+    episodescroll: {
+        // height: '100%'
+        height: 400
     }
 })

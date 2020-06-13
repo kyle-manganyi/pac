@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     },
     topSection: {
         backgroundColor: 'white',
-        flex:3
+        flex:2
     },
     bottomSection: {
         flex:2
