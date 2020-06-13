@@ -8,6 +8,8 @@ import carousel from '../components/carousel/carousel'
 import player from '../components/players/player'
 
 
+import ExploreScreen from '../screens/ExploreScreen'
+
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
 
@@ -35,8 +37,8 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name="play"
-        component={HomeScreen}
+        name="Explore"
+        component={ExploreScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="play-circle" />,
         }}
