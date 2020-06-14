@@ -511,45 +511,6 @@ export default class App extends React.Component {
           />
         </View>
         </TouchableWithoutFeedback>
-        {this.state.showControls ? <View
-          style={[
-            styles.playbackContainer,
-            {
-              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0
-            }
-          ]}
-        >
-          <Slider
-            style={styles.playbackSlider}
-            trackImage={ICON_TRACK_1.module}
-            thumbImage={ICON_THUMB_1.module}
-            value={this._getSeekSliderPosition()}
-            onValueChange={this._onSeekSliderValueChange}
-            onSlidingComplete={this._onSeekSliderSlidingComplete}
-            disabled={this.state.isLoading}
-          />
-          <View style={styles.timestampRow}>
-            <Text
-              style={[
-                styles.text,
-                styles.buffering,
-                { fontFamily: "cutive-mono-regular" }
-              ]}
-            >
-              {this.state.isBuffering ? BUFFERING_STRING : ""}
-            </Text>
-            <Text
-              style={[
-                styles.text,
-                styles.timestamp,
-                { fontFamily: "cutive-mono-regular", fontWeight:"900" },
-              ]}
-            >
-              {this._getTimestamp()}
-            </Text>
-          </View>
-        </View> : null}
-
         {
             this.state.showControls ? <View
             style={[
@@ -621,6 +582,44 @@ export default class App extends React.Component {
             </TouchableHighlight>
           </View>:null
         }
+        {this.state.showControls ? <View
+          style={[
+            styles.playbackContainer,
+            {
+              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0
+            }
+          ]}
+        >
+          <Slider
+            style={styles.playbackSlider}
+            trackImage={ICON_TRACK_1.module}
+            thumbImage={ICON_THUMB_1.module}
+            value={this._getSeekSliderPosition()}
+            onValueChange={this._onSeekSliderValueChange}
+            onSlidingComplete={this._onSeekSliderSlidingComplete}
+            disabled={this.state.isLoading}
+          />
+          <View style={styles.timestampRow}>
+            <Text
+              style={[
+                styles.text,
+                styles.buffering,
+                { fontFamily: "cutive-mono-regular" }
+              ]}
+            >
+              {this.state.isBuffering ? BUFFERING_STRING : ""}
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                styles.timestamp,
+                { fontFamily: "cutive-mono-regular", fontWeight:"900" },
+              ]}
+            >
+              {this._getTimestamp()}
+            </Text>
+          </View>
+        </View> : null}
       </View>
     );
   }
@@ -659,7 +658,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
     minHeight: ICON_THUMB_1.height * 2.0,
-    maxHeight: ICON_THUMB_1.height * 2.0
+    maxHeight: ICON_THUMB_1.height * 2.0,
+    paddingBottom: 50
   },
   playbackSlider: {
     alignSelf: "stretch",
@@ -674,7 +674,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignSelf: "stretch",
     minHeight: FONT_SIZE,
-    color:"#fff"
+    color:"#fff",
+    paddingBottom:5
   },
   text: {
     fontSize: FONT_SIZE,
@@ -698,7 +699,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   buttonsContainerTopRow: {
-      marginBottom:15,
     maxHeight: 30,
     minWidth: DEVICE_WIDTH / 2.0,
     maxWidth: DEVICE_WIDTH / 2.0

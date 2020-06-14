@@ -3,9 +3,10 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import carousel from '../components/carousel/carousel'
-import player from '../components/players/player'
+import Profile from '../screens/Profile';
+import Notifications from '../screens/notification';
+
+
 
 
 import ExploreScreen from '../screens/ExploreScreen'
@@ -17,7 +18,6 @@ export default function BottomTabNavigator({ navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  // navigation.setOptions({ headerTitle: getHeaderTitle(route) });
 
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
@@ -30,10 +30,9 @@ export default function BottomTabNavigator({ navigation, route }) {
       />
       <BottomTab.Screen
         name="notification"
-        component={player}
+        component={Notifications}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="bell" />,
-          tabBarVisible: false
         }}
       />
       <BottomTab.Screen
@@ -44,30 +43,12 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name="shop"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="shopping-bag" />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Links"
-        component={LinksScreen}
+        name="profile"
+        component={Profile}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="user" />,
         }}
       />
     </BottomTab.Navigator>
   );
-}
-
-function getHeaderTitle(route) {
-  const routeName = route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
-
-  switch (routeName) {
-    case 'Home':
-      return 'How to get started';
-    case 'Links':
-      return 'Links to learn more';
-  }
 }

@@ -8,10 +8,8 @@ import MyAudioPlayer from "./audioplayer";
 import { ScrollView } from "react-native-gesture-handler";
 import Comment from "../comment/comment";
 import Next from "../SmallVideoPreview/SmallVideoPreview";
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
-const player = ({navigation}) => {
+const player = () => {
   const [hide, setHide] = React.useState(true);
   const [component, setcomponent] = React.useState("next");
   const [player, setPlayer] = React.useState("video");
@@ -27,9 +25,7 @@ const player = ({navigation}) => {
           marginTop: 25
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Home')}
-        >
+        <TouchableOpacity>
           <FontAwesome
             name={"arrow-left"}
             size={30}

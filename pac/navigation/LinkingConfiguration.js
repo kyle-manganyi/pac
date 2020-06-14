@@ -8,6 +8,8 @@ export default {
       screens: {
         Home: 'home',
         Links: 'links',
+        player: "player",
+        profile: "profile"
       },
     },
   },

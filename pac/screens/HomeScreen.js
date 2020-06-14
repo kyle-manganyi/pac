@@ -14,8 +14,10 @@ import Carousel from "../components/carousel/carousel";
 import Colors from "../constants/Colors";
 import Preview from "../components/midVideoPreview/midVideoPreview"
 import { FontAwesome } from "@expo/vector-icons";
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={{ flex: 1 }}>
@@ -108,7 +110,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={{width:250, marginHorizontal:10}}>
+            <TouchableOpacity style={{width:250, marginHorizontal:10}} onPress={() => navigation.navigate('player')}>
               <Preview/>
             </TouchableOpacity>
             <TouchableOpacity style={{width:250, marginHorizontal:10}}>
