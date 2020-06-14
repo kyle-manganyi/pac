@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import BigScrollList from '../BigScrollList/BigScrollList'
 import SmallScrollList from '../SmallScrollList/SmallScrollList'
+import MidScrollList from '../MidScrollList/MidScrollList'
 
 const EpisodeListBig = ({navigation}) => {
     return (
@@ -21,7 +22,8 @@ const EpisodeListBig = ({navigation}) => {
             </View>
             <View style={{borderBottomWidth: .7, borderBottomColor:"white"}}/>
             {/* <BigScrollList style={{flex:1}}/> */}
-            <SmallScrollList style={{flex:1}} />
+            {/* <SmallScrollList style={{flex:1}} /> */}
+            <MidScrollList style={{flex:1}} />
         </View>
     )
 }
@@ -38,10 +40,8 @@ const styles = StyleSheet.create({
     gridformat: {
         display: 'flex',
         flexDirection: 'row',
-        // flex: 6
     },
     episodescroll: {
-        // height: '100%'
         height: 400
     }
 })
