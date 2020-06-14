@@ -39,7 +39,6 @@ class PlaylistItem {
 const PLAYLIST = [
   new PlaylistItem(
     "Popeye - I don't scare",
-    "https://firebasestorage.googleapis.com/v0/b/active-gasket-212409.appspot.com/o/podcast.mp4?alt=media&token=79d33db2-ee31-48d1-82b6-71426b7b98bd",
     true
   )
 ];
@@ -127,6 +126,7 @@ const VIDEO_CONTAINER_HEIGHT = (DEVICE_HEIGHT * 2.0) / 5.0 - FONT_SIZE * 2;
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    console.log(props)
     this.index = 0;
     this.isSeeking = false;
     this.shouldPlayAtEndOfSeek = false;
@@ -152,7 +152,8 @@ export default class App extends React.Component {
       useNativeControls: false,
       fullscreen: false,
       throughEarpiece: false,
-      showControls: true
+      showControls: true,
+      video:this.props.video
     };
   }
 
@@ -181,7 +182,7 @@ export default class App extends React.Component {
       this.playbackInstance = null;
     }
 
-    const source = { uri: PLAYLIST[this.index].uri };
+    const source = { uri: this.state.video };
     const initialStatus = {
       shouldPlay: playing,
       rate: this.state.rate,
