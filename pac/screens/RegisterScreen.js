@@ -1,59 +1,73 @@
 import * as React from 'react'
 import {StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native'
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
 
+    const [fullname, onChangeFullname] = React.useState('')
     const [email, onChangeEmail] = React.useState('')
     const [password, onChangePassword] = React.useState('')
+    const [confirm, onChangeConfirm] = React.useState('')
 
     return (
         <View style={styles.container}>
-            <Text style={styles.heading}>Sign in</Text>
+            <Text style={styles.heading}>Create an Account</Text>
         
             <View style={styles.loginform}>
+                <TextInput style={styles.input}
+                    placeholder='Full Name'
+                    onChangeText={text => onChangeFullname(text)}
+                    value={fullname}
+                />
                 <TextInput style={styles.input}
                     placeholder='Email'
                     onChangeText={text => onChangeEmail(text)}
                     value={email}
-                />
+                />  
                 <TextInput style={styles.input}
                     placeholder='Password'
                     onChangeText={text => onChangePassword(text)}
                     value={password}
+                />
+                <TextInput style={styles.input}
+                    placeholder='Confirm Password'
+                    onChangeText={text => onChangeConfirm(text)}
+                    value={confirm}
                 />   
+            </View>
+
+            <View style={{paddingTop: 18, paddingLeft: 18,}}>
+                <Text style={{fontWeight: '100', fontSize: 12}}>By creating an account, you agree to our Terms of Service and Privacy Policy
+                </Text>
             </View>
             <TouchableOpacity style={{marginTop: 24,}}
                 onPress = {() =>console.log('send logins to get user obj')}
             >
                 <View style={styles.btnlogin}>
-                    <Text style={styles.btntext}>Sing in</Text>
+                    <Text style={styles.btntext}>Sign up</Text>
                 </View>
             </TouchableOpacity>
-            <View style={{paddingTop: 18, paddingLeft: 18, fontWeight: '300'}}>
-                <Text>forgot password? click here</Text>
-            </View>
-            <View style={{paddingTop: 18, paddingLeft: 18, fontWeight: '300'}}>
-                <Text>don't have an account? Signup</Text>
+            <View style={{paddingTop: 18, paddingLeft: 18,}}>
+                <Text style={{fontWeight: '200',}}>Already have an account? Login</Text>
             </View>
         </View>
     )
 }
 
-export default LoginScreen
+export default RegisterScreen
 
 const styles = StyleSheet.create({
 
     container: {
         paddingHorizontal: 20,
-        paddingVertical: 140
+        paddingVertical: 80
     },
     loginform:{
-        paddingHorizontal: 12,
+        paddingHorizontal: 28,
     },
     heading: {
         textAlign:'center',
-        fontSize: 40,
-        fontWeight: '400',
+        fontSize: 36,
+        fontWeight: '300',
         paddingVertical: 8
     },
     input: {
