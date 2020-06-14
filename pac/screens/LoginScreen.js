@@ -1,7 +1,29 @@
 import * as React from 'react'
 import {StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native'
 
-const LoginScreen = () => {
+const fnLogin = (username,password,navigation) => {
+    const url = `https://kpopapi.herokuapp.com/api/User/login?user=${username}&password=${password}`
+    return (fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }) 
+      .then(res => res.json())
+        .then(result => {
+            if (result) {
+                navigation.navigate('Home', result)
+        } else {
+        alett.style.display = 'block'
+        }
+    })
+    .catch(err => {
+        return (console.log('not now  ' + err))
+    }))
+}
+
+const LoginScreen = ({navigation}) => {
 
     const [email, onChangeEmail] = React.useState('')
     const [password, onChangePassword] = React.useState('')
@@ -12,18 +34,20 @@ const LoginScreen = () => {
         
             <View style={styles.loginform}>
                 <TextInput style={styles.input}
+                    autoCorrect={true}
                     placeholder='Email'
                     onChangeText={text => onChangeEmail(text)}
                     value={email}
                 />
                 <TextInput style={styles.input}
+                    secureTextEntry={true}
                     placeholder='Password'
                     onChangeText={text => onChangePassword(text)}
                     value={password}
                 />   
             </View>
             <TouchableOpacity style={{marginTop: 24,}}
-                onPress = {() =>console.log('send logins to get user obj')}
+                onPress = {() => fnLogin(email,password,navigation)}
             >
                 <View style={styles.btnlogin}>
                     <Text style={styles.btntext}>Sing in</Text>

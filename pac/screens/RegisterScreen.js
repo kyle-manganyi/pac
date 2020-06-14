@@ -1,7 +1,40 @@
 import * as React from 'react'
 import {StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native'
 
-const RegisterScreen = () => {
+
+const fnRegister = (user,navigation) => {
+    console.log(user.email)
+    const url = `https://kpopapi.herokuapp.com/api/User/registeration`
+    return (fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({  
+            email: user.email,
+            username: user.email,
+            cellphone: '123456789',
+            password: user.password
+         })
+        
+      }) 
+      .then(res => res.json())
+        .then(result => {
+            if (result) {
+                console.log('ifikile', result)
+                navigation.navigate('Home', result)
+                // console.log('ifikile', result)
+        } else {
+            alett.style.display = 'block'
+        }
+    })
+    .catch(err => {
+        return (console.log('not now  ' + err))
+    }))
+}
+
+const RegisterScreen = ({navigation}) => {
 
     const [fullname, onChangeFullname] = React.useState('')
     const [email, onChangeEmail] = React.useState('')
@@ -24,11 +57,13 @@ const RegisterScreen = () => {
                     value={email}
                 />  
                 <TextInput style={styles.input}
+                    secureTextEntry={true}
                     placeholder='Password'
                     onChangeText={text => onChangePassword(text)}
                     value={password}
                 />
                 <TextInput style={styles.input}
+                    secureTextEntry={true}
                     placeholder='Confirm Password'
                     onChangeText={text => onChangeConfirm(text)}
                     value={confirm}
@@ -40,7 +75,13 @@ const RegisterScreen = () => {
                 </Text>
             </View>
             <TouchableOpacity style={{marginTop: 24,}}
-                onPress = {() =>console.log('send logins to get user obj')}
+                // onPress = {() =>console.log('send logins to get user obj')}
+                onPress = {() => fnRegister({
+                    email: email,
+                    username: email,
+                    cellphone: '123456789',
+                    password: password
+                }, navigation)}
             >
                 <View style={styles.btnlogin}>
                     <Text style={styles.btntext}>Sign up</Text>
