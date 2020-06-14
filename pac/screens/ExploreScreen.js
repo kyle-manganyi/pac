@@ -1,4 +1,4 @@
-import { View,ScrollView,Text,ImageBackground,StyleSheet } from 'react-native'
+import { View,StyleSheet } from 'react-native'
 import * as React from 'react'
 
 import BigVideoPreview from '../components/BigVideoPreview/BigVideoPreview'

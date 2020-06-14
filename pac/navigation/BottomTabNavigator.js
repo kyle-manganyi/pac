@@ -7,6 +7,7 @@ import LinksScreen from '../screens/LinksScreen';
 import carousel from '../components/carousel/carousel'
 import player from '../components/players/player'
 
+import Login from '../screens/LoginScreen'
 
 import ExploreScreen from '../screens/ExploreScreen'
 
@@ -51,8 +52,8 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name="Links"
-        component={LinksScreen}
+        name="Login"
+        component={Login}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="user" />,
         }}

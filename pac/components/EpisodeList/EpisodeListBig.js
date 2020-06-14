@@ -4,14 +4,13 @@ import { Entypo,FontAwesome }  from '@expo/vector-icons'
 
 import BigScrollList from '../BigScrollList/BigScrollList'
 import SmallScrollList from '../SmallScrollList/SmallScrollList'
+import MidScrollList from '../MidScrollList/MidScrollList'
 
 const EpisodeListBig = () => {
     return (
         <View style={{flex: 1}}>
             <View style={styles.alleps}>
-                <Text style={{fontWeight: '300',}}>
-                    All Episodes
-                </Text>
+                <Text style={{fontWeight: '300',}}>All Episodes </Text>
                 <View style={styles.gridformat}>
                     <Entypo name="list" size={20} style={{paddingHorizontal: 8,}}/>
                     <FontAwesome name="square" size={20}/>
@@ -19,7 +18,8 @@ const EpisodeListBig = () => {
             </View>
 
             {/* <BigScrollList style={{flex:1}}/> */}
-            <SmallScrollList style={{flex:1}} />
+            {/* <SmallScrollList style={{flex:1}} /> */}
+            <MidScrollList style={{flex:1}} />
         </View>
     )
 }
@@ -36,10 +36,8 @@ const styles = StyleSheet.create({
     gridformat: {
         display: 'flex',
         flexDirection: 'row',
-        // flex: 6
     },
     episodescroll: {
-        // height: '100%'
         height: 400
     }
 })
