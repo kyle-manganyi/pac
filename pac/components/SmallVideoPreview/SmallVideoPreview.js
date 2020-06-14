@@ -7,11 +7,11 @@ const SmallVidePreview = () => {
     return (
         <View style={styles.container}>
             <ImageBackground source={image} style={styles.image}>
-                <Text style={styles.text}>Play</Text>
+                <Text style={styles.text}></Text>
             </ImageBackground>
 
             <View style={styles.description}>
-                <Text style={{fontWeight: '200',}}>
+                <Text style={{fontWeight: '200',color:"#fff"}}>
                     Lorem ipsum dolor sit amet, consectetur
                 </Text>
                 <View style={styles.poddetails}>
@@ -26,6 +26,7 @@ const SmallVidePreview = () => {
             <Text style={styles.duration}>
                 45.59
             </Text>
+            <View style={{borderBottomWidth: .7}}/>
         </View>
     )
 }
@@ -47,29 +48,34 @@ const styles = StyleSheet.create({
         color: "grey",
         fontSize: 30,
         fontWeight: "bold",
-        height: '100%'
+        height: '100%',
+        color:"#fff"
     },
     description: {
         flex: 4,
         paddingLeft: 8,
         alignSelf: 'center',
+        color:"#fff"
         // flexDirection: 'row'
     },
     duration: {
         flex: 1,
         fontWeight: '100',
         fontSize: 15,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        color:"#fff"
     },
     poddetails: {
         fontWeight: '100',
         fontSize: 40,
+        color:"#fff"
         // flexDirection: 'row',
         // alignItems: 'stretch'
     },
     nums: {
         fontWeight: '200',
         fontSize: 10,
+        color: "#fff"
         // alignItems: 'baseline'
     }
 

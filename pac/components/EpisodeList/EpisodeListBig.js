@@ -2,21 +2,25 @@ import * as React from 'react'
 import { View, Text ,StyleSheet, ScrollView } from 'react-native'
 import { Entypo,FontAwesome }  from '@expo/vector-icons'
 
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
 import BigScrollList from '../BigScrollList/BigScrollList'
 import SmallScrollList from '../SmallScrollList/SmallScrollList'
 import MidScrollList from '../MidScrollList/MidScrollList'
 
-const EpisodeListBig = () => {
+const EpisodeListBig = ({navigation}) => {
     return (
         <View style={{flex: 1}}>
             <View style={styles.alleps}>
-                <Text style={{fontWeight: '300',}}>All Episodes </Text>
+                <Text style={{fontWeight: '300', color:"white", marginLeft:10}}>
+                    All Episodes
+                </Text>
                 <View style={styles.gridformat}>
-                    <Entypo name="list" size={20} style={{paddingHorizontal: 8,}}/>
-                    <FontAwesome name="square" size={20}/>
+                    <Entypo name="list" size={20} style={{paddingHorizontal: 8, color:"white"}}/>
                 </View>
             </View>
-
+            <View style={{borderBottomWidth: .7, borderBottomColor:"white"}}/>
             {/* <BigScrollList style={{flex:1}}/> */}
             {/* <SmallScrollList style={{flex:1}} /> */}
             <MidScrollList style={{flex:1}} />

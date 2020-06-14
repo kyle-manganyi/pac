@@ -39,7 +39,6 @@ class PlaylistItem {
 const PLAYLIST = [
   new PlaylistItem(
     "Popeye - I don't scare",
-    "https://firebasestorage.googleapis.com/v0/b/active-gasket-212409.appspot.com/o/podcast.mp4?alt=media&token=79d33db2-ee31-48d1-82b6-71426b7b98bd",
     true
   )
 ];
@@ -127,6 +126,7 @@ const VIDEO_CONTAINER_HEIGHT = (DEVICE_HEIGHT * 2.0) / 5.0 - FONT_SIZE * 2;
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    console.log(props)
     this.index = 0;
     this.isSeeking = false;
     this.shouldPlayAtEndOfSeek = false;
@@ -152,7 +152,8 @@ export default class App extends React.Component {
       useNativeControls: false,
       fullscreen: false,
       throughEarpiece: false,
-      showControls: true
+      showControls: true,
+      video:this.props.video
     };
   }
 
@@ -181,7 +182,7 @@ export default class App extends React.Component {
       this.playbackInstance = null;
     }
 
-    const source = { uri: PLAYLIST[this.index].uri };
+    const source = { uri: this.state.video };
     const initialStatus = {
       shouldPlay: playing,
       rate: this.state.rate,
@@ -511,45 +512,6 @@ export default class App extends React.Component {
           />
         </View>
         </TouchableWithoutFeedback>
-        {this.state.showControls ? <View
-          style={[
-            styles.playbackContainer,
-            {
-              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0
-            }
-          ]}
-        >
-          <Slider
-            style={styles.playbackSlider}
-            trackImage={ICON_TRACK_1.module}
-            thumbImage={ICON_THUMB_1.module}
-            value={this._getSeekSliderPosition()}
-            onValueChange={this._onSeekSliderValueChange}
-            onSlidingComplete={this._onSeekSliderSlidingComplete}
-            disabled={this.state.isLoading}
-          />
-          <View style={styles.timestampRow}>
-            <Text
-              style={[
-                styles.text,
-                styles.buffering,
-                { fontFamily: "cutive-mono-regular" }
-              ]}
-            >
-              {this.state.isBuffering ? BUFFERING_STRING : ""}
-            </Text>
-            <Text
-              style={[
-                styles.text,
-                styles.timestamp,
-                { fontFamily: "cutive-mono-regular", fontWeight:"900" },
-              ]}
-            >
-              {this._getTimestamp()}
-            </Text>
-          </View>
-        </View> : null}
-
         {
             this.state.showControls ? <View
             style={[
@@ -621,6 +583,44 @@ export default class App extends React.Component {
             </TouchableHighlight>
           </View>:null
         }
+        {this.state.showControls ? <View
+          style={[
+            styles.playbackContainer,
+            {
+              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0
+            }
+          ]}
+        >
+          <Slider
+            style={styles.playbackSlider}
+            trackImage={ICON_TRACK_1.module}
+            thumbImage={ICON_THUMB_1.module}
+            value={this._getSeekSliderPosition()}
+            onValueChange={this._onSeekSliderValueChange}
+            onSlidingComplete={this._onSeekSliderSlidingComplete}
+            disabled={this.state.isLoading}
+          />
+          <View style={styles.timestampRow}>
+            <Text
+              style={[
+                styles.text,
+                styles.buffering,
+                { fontFamily: "cutive-mono-regular" }
+              ]}
+            >
+              {this.state.isBuffering ? BUFFERING_STRING : ""}
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                styles.timestamp,
+                { fontFamily: "cutive-mono-regular", fontWeight:"900" },
+              ]}
+            >
+              {this._getTimestamp()}
+            </Text>
+          </View>
+        </View> : null}
       </View>
     );
   }
@@ -659,7 +659,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
     minHeight: ICON_THUMB_1.height * 2.0,
-    maxHeight: ICON_THUMB_1.height * 2.0
+    maxHeight: ICON_THUMB_1.height * 2.0,
+    paddingBottom: 50
   },
   playbackSlider: {
     alignSelf: "stretch",
@@ -674,7 +675,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignSelf: "stretch",
     minHeight: FONT_SIZE,
-    color:"#fff"
+    color:"#fff",
+    paddingBottom:5
   },
   text: {
     fontSize: FONT_SIZE,
@@ -698,7 +700,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   buttonsContainerTopRow: {
-      marginBottom:15,
     maxHeight: 30,
     minWidth: DEVICE_WIDTH / 2.0,
     maxWidth: DEVICE_WIDTH / 2.0

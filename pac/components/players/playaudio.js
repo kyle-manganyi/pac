@@ -8,15 +8,12 @@ import MyAudioPlayer from "./audioplayer";
 import { ScrollView } from "react-native-gesture-handler";
 import Comment from "../comment/comment";
 import Next from "../SmallVideoPreview/SmallVideoPreview";
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
-const player = ({route,navigation}) => {
+const player = () => {
   const [hide, setHide] = React.useState(true);
   const [component, setcomponent] = React.useState("next");
   const [player, setPlayer] = React.useState("video");
   const image = { uri: "https://reactjs.org/logo-og.png" };
-  const episode = route.params
 
   return (
     <View style={{ flex: 1 }}>
@@ -28,9 +25,7 @@ const player = ({route,navigation}) => {
           marginTop: 25
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Home')}
-        >
+        <TouchableOpacity>
           <FontAwesome
             name={"arrow-left"}
             size={30}
@@ -100,11 +95,11 @@ const player = ({route,navigation}) => {
           flex:  player === "video"? 0:0
         }}
       >
-        {player === "video" ? <MyVideoPlayer video={episode.video} /> : <MyAudioPlayer />}
+        {player === "video" ? <MyVideoPlayer /> : <MyAudioPlayer />}
         {hide ? (
           <View style={{ marginTop: 10, marginHorizontal: 10 }}>
             <Text style={{ color: Colors.tabIconSelected, fontSize: 18 }}>
-              {episode.description}
+              this will be the short descriptionK
             </Text>
             <Text
               style={{
@@ -113,7 +108,7 @@ const player = ({route,navigation}) => {
                 fontSize: 12
               }}
             >
-              {episode.views} Views
+              4.9M Views
             </Text>
             <View
               style={{
@@ -129,7 +124,7 @@ const player = ({route,navigation}) => {
                   size={25}
                   color={Colors.tabIconSelected}
                 />
-                <Text>{episode.like}</Text>
+                <Text>200</Text>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome
@@ -137,7 +132,7 @@ const player = ({route,navigation}) => {
                   size={25}
                   color={Colors.tabIconSelected}
                 />
-                <Text>{episode.id}</Text>
+                <Text>1</Text>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome
@@ -184,7 +179,7 @@ const player = ({route,navigation}) => {
                   size={40}
                   color={Colors.tabIconSelected}
                 />
-                <Text style={{ fontSize: 18, marginLeft: 10 }}>{episode.title}</Text>
+                <Text style={{ fontSize: 18, marginLeft: 10 }}>Podcast</Text>
               </View>
               <View
                 style={{

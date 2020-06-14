@@ -6,6 +6,8 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
+import player from './components/players/player'
+import profile from './screens/Profile'
 
 import LoginScreen from './screens/LoginScreen'
 
@@ -24,6 +26,7 @@ export default function App(props) {
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Root" component={BottomTabNavigator} />
             <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="player" component={player} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>

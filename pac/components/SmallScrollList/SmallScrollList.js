@@ -1,22 +1,23 @@
 import * as React from 'react'
-import {View, ScrollView} from 'react-native'
-
+import {View, StyleSheet, TouchableOpacity, Text, ScrollView} from 'react-native'
 import SmallVidePreview from '../SmallVideoPreview/SmallVideoPreview'
 
-const SmallScrollList = () => {
+const image = { uri: "https://reactjs.org/logo-og.png" }
+
+const SmallScrollList = ({ navigation }) => {
     return (
         <ScrollView>
-            <View style={{paddingVertical: 12,}}><SmallVidePreview /></View>
-                <View style={{borderBottomWidth: .7}}/>
-            <View style={{paddingVertical: 12,}}><SmallVidePreview /></View>
-                <View style={{borderBottomWidth: .7}}/>
-            <View style={{paddingVertical: 12,}}><SmallVidePreview /></View>
-                <View style={{borderBottomWidth: .7}}/>
-            <View style={{paddingVertical: 12,}}><SmallVidePreview /></View>
-                <View style={{borderBottomWidth: .7}}/>
-            <View style={{paddingVertical: 12,}}><SmallVidePreview /></View>
-                <View style={{borderBottomWidth: .7}}/>
-            <View style={{paddingVertical: 12,}}><SmallVidePreview /></View>
+            <TouchableOpacity style={{paddingVertical: 12,}} onPress={() => navigation.navigate('player')}><SmallVidePreview /></TouchableOpacity>
+                <View style={{borderBottomWidth: .7, borderBottomColor:"white"}}/>
+            <TouchableOpacity style={{paddingVertical: 12,}} onPress={() => navigation.navigate('player')}><SmallVidePreview /></TouchableOpacity>
+                <View style={{borderBottomWidth: .7, borderBottomColor:"white"}}/>
+            <TouchableOpacity style={{paddingVertical: 12,}} onPress={() => navigation.navigate('player')}><SmallVidePreview /></TouchableOpacity>
+                <View style={{borderBottomWidth: .7, borderBottomColor:"white"}}/>
+            <TouchableOpacity style={{paddingVertical: 12,}} onPress={() => navigation.navigate('player')}><SmallVidePreview /></TouchableOpacity>
+                <View style={{borderBottomWidth: .7, borderBottomColor:"white"}}/>
+            <TouchableOpacity style={{paddingVertical: 12,}} onPress={() => navigation.navigate('player')}><SmallVidePreview /></TouchableOpacity>
+                <View style={{borderBottomWidth: .7, borderBottomColor:"white"}}/>
+            <TouchableOpacity style={{paddingVertical: 12,}} onPress={() => navigation.navigate('player')}><SmallVidePreview /></TouchableOpacity>
         </ScrollView>
     )
 }

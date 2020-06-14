@@ -9,7 +9,7 @@ const BigVideoPreview = () => {
         <View style={styles.container}>
             <View style={styles.topview}>
                 <ImageBackground source={image} style={styles.image}>
-                    <Text style={styles.text}>Play</Text>
+                    <Text style={styles.text}></Text>
                 </ImageBackground>
             </View>
 
