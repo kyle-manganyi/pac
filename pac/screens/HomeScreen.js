@@ -18,6 +18,23 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 export default function HomeScreen({ navigation }) {
+
+  const [episodes, setEpisodes] = React.useState();
+  React.useEffect(() => {
+    fetch(`https://kpopapi.herokuapp.com/api/episode`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => setEpisodes(result))
+      .catch(err => {
+        return console.log("not now  " + err);
+      });
+  },[]);
+
+  console.log(episodes)
   return (
     <View style={styles.container}>
       <View style={{ flex: 1 }}>
@@ -110,12 +127,13 @@ export default function HomeScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={{width:250, marginHorizontal:10}} onPress={() => navigation.navigate('player')}>
-              <Preview/>
-            </TouchableOpacity>
-            <TouchableOpacity style={{width:250, marginHorizontal:10}}>
-              <Preview/>
-            </TouchableOpacity>
+          { episodes && episodes.map( e => (
+            <TouchableOpacity style={{width:250, marginHorizontal:10}} onPress={() => navigation.navigate('player', e)}>
+              {
+                e !== undefined || {} ?  <Preview episode={e}/> : null
+              }
+            </TouchableOpacity>    
+          ))}  
           </ScrollView>
           <View
             style={{

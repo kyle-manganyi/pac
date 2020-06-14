@@ -5,7 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 
 const image = { uri: "https://reactjs.org/logo-og.png" };
-const midvideoPreview = () => {
+const midvideoPreview = (props) => {
   return (
     <View style={{ width: 250 }}>
       <ImageBackground source={image} style={{ height: 150, width: 250, justifyContent:"center", alignItems:"center" }}>
@@ -16,7 +16,7 @@ const midvideoPreview = () => {
             />
       </ImageBackground>
       <View>
-        <Text numberOfLines={2} ellipsizeMode='tail'>this will have the episode</Text>
+        <Text numberOfLines={2} ellipsizeMode='tail'>{props.episode !== undefined ? props.episode.description:"blank"}</Text>
       </View>
       <View
         style={{
@@ -26,7 +26,7 @@ const midvideoPreview = () => {
         }}
       >
         <View>
-          <Text numberOfLines={1} ellipsizeMode='tail' style={{maxWidth:100}}>Podcast name is very long</Text>
+          <Text numberOfLines={1} ellipsizeMode='tail' style={{maxWidth:100}}>{props.episode !== undefined ? props.episode.title:"blank"}</Text>
         </View>
         <View>
           <Text>1K views</Text>

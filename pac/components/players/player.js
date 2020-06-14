@@ -11,11 +11,12 @@ import Next from "../SmallVideoPreview/SmallVideoPreview";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-const player = ({navigation}) => {
+const player = ({route,navigation}) => {
   const [hide, setHide] = React.useState(true);
   const [component, setcomponent] = React.useState("next");
   const [player, setPlayer] = React.useState("video");
   const image = { uri: "https://reactjs.org/logo-og.png" };
+  const episode = route.params
 
   return (
     <View style={{ flex: 1 }}>
@@ -99,11 +100,11 @@ const player = ({navigation}) => {
           flex:  player === "video"? 0:0
         }}
       >
-        {player === "video" ? <MyVideoPlayer /> : <MyAudioPlayer />}
+        {player === "video" ? <MyVideoPlayer video={episode.video} /> : <MyAudioPlayer />}
         {hide ? (
           <View style={{ marginTop: 10, marginHorizontal: 10 }}>
             <Text style={{ color: Colors.tabIconSelected, fontSize: 18 }}>
-              this will be the short descriptionK
+              {episode.description}
             </Text>
             <Text
               style={{
@@ -112,7 +113,7 @@ const player = ({navigation}) => {
                 fontSize: 12
               }}
             >
-              4.9M Views
+              {episode.views} Views
             </Text>
             <View
               style={{
@@ -128,7 +129,7 @@ const player = ({navigation}) => {
                   size={25}
                   color={Colors.tabIconSelected}
                 />
-                <Text>200</Text>
+                <Text>{episode.like}</Text>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome
@@ -136,7 +137,7 @@ const player = ({navigation}) => {
                   size={25}
                   color={Colors.tabIconSelected}
                 />
-                <Text>1</Text>
+                <Text>{episode.id}</Text>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome
@@ -183,7 +184,7 @@ const player = ({navigation}) => {
                   size={40}
                   color={Colors.tabIconSelected}
                 />
-                <Text style={{ fontSize: 18, marginLeft: 10 }}>Podcast</Text>
+                <Text style={{ fontSize: 18, marginLeft: 10 }}>{episode.title}</Text>
               </View>
               <View
                 style={{
