@@ -17,7 +17,7 @@ const player = ({route,navigation}) => {
   const [player, setPlayer] = React.useState("video");
   const image = { uri: "https://reactjs.org/logo-og.png" };
   const episode = route.params
-
+  
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -100,7 +100,7 @@ const player = ({route,navigation}) => {
           flex:  player === "video"? 0:0
         }}
       >
-        {player === "video" ? <MyVideoPlayer video={episode.video} /> : <MyAudioPlayer />}
+        {player === "video" ? <MyVideoPlayer video={episode.video} /> : <MyAudioPlayer video={episode.video} />}
         {hide ? (
           <View style={{ marginTop: 10, marginHorizontal: 10 }}>
             <Text style={{ color: Colors.tabIconSelected, fontSize: 18 }}>

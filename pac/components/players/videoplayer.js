@@ -18,6 +18,9 @@ import { Audio, Video } from "expo-av";
 import * as Font from "expo-font";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+console.disableYellowBox = true;
+
+
 
 class Icon {
   constructor(module, width, height) {
@@ -35,13 +38,6 @@ class PlaylistItem {
     this.isVideo = isVideo;
   }
 }
-
-const PLAYLIST = [
-  new PlaylistItem(
-    "Popeye - I don't scare",
-    true
-  )
-];
 
 const ICON_THROUGH_EARPIECE = "speaker-phone";
 const ICON_THROUGH_SPEAKER = "speaker";
@@ -121,7 +117,7 @@ const FONT_SIZE = 14;
 const LOADING_STRING = "... loading ...";
 const BUFFERING_STRING = "...buffering...";
 const RATE_SCALE = 3.0;
-const VIDEO_CONTAINER_HEIGHT = (DEVICE_HEIGHT * 2.0) / 5.0 - FONT_SIZE * 2;
+const VIDEO_CONTAINER_HEIGHT = (DEVICE_HEIGHT * 0.3)
 
 export default class App extends React.Component {
   constructor(props) {
@@ -153,7 +149,13 @@ export default class App extends React.Component {
       fullscreen: false,
       throughEarpiece: false,
       showControls: true,
-      video:this.props.video
+      PLAYLIST : [
+        new PlaylistItem(
+          "Popeye - I don't scare",
+          this.props.video,
+          true
+        )
+      ]
     };
   }
 
@@ -182,7 +184,7 @@ export default class App extends React.Component {
       this.playbackInstance = null;
     }
 
-    const source = { uri: this.state.video };
+    const source = { uri: this.state.PLAYLIST[this.index].uri };
     const initialStatus = {
       shouldPlay: playing,
       rate: this.state.rate,
@@ -194,7 +196,7 @@ export default class App extends React.Component {
       // androidImplementation: 'MediaPlayer',
     };
 
-    if (PLAYLIST[this.index].isVideo) {
+    if (this.state.PLAYLIST[this.index].isVideo) {
       console.log(this._onPlaybackStatusUpdate);
       await this._video.loadAsync(source, initialStatus);
       // this._video.onPlaybackStatusUpdate(this._onPlaybackStatusUpdate);
@@ -229,8 +231,8 @@ export default class App extends React.Component {
       });
     } else {
       this.setState({
-        playbackInstanceName: PLAYLIST[this.index].name,
-        showVideo: PLAYLIST[this.index].isVideo,
+        playbackInstanceName: this.state.PLAYLIST[this.index].name,
+        showVideo: this.state.PLAYLIST[this.index].isVideo,
         isLoading: false
       });
     }
@@ -320,7 +322,7 @@ export default class App extends React.Component {
         this.playbackInstance.pauseAsync();
       } else {
         this.playbackInstance.playAsync();
-        this.setState({showControls:false})
+        this._onControls()
       }
     }
   };
@@ -497,7 +499,7 @@ export default class App extends React.Component {
               styles.video,
               {
                 opacity: this.state.showVideo ? 1.0 : 0.0,
-                width: this.state.videoWidth,
+                width: DEVICE_WIDTH,
                 height: this.state.videoHeight
               }
             ]}

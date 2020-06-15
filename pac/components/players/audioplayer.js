@@ -19,6 +19,7 @@ import * as Font from "expo-font";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
+console.disableYellowBox = true;
 
 class Icon {
   constructor(module, width, height) {
@@ -37,13 +38,6 @@ class PlaylistItem {
   }
 }
 
-const PLAYLIST = [
-  new PlaylistItem(
-    "Popeye - I don't scare",
-    "https://ia800304.us.archive.org/34/items/PaulWhitemanwithMildredBailey/PaulWhitemanwithMildredBailey-AllofMe.mp3",
-    false
-  )
-];
 
 const ICON_THROUGH_EARPIECE = "speaker-phone";
 const ICON_THROUGH_SPEAKER = "speaker";
@@ -153,8 +147,13 @@ export default class App extends React.Component {
       useNativeControls: false,
       fullscreen: false,
       throughEarpiece: false,
-      image : { uri: "https://reactjs.org/logo-og.png" }
-
+      PLAYLIST : [
+        new PlaylistItem(
+          "Popeye - I don't scare",
+          this.props.video,
+          true
+        )
+      ]
     };
   }
 
@@ -184,7 +183,7 @@ export default class App extends React.Component {
       this.playbackInstance = null;
     }
 
-    const source = { uri: PLAYLIST[this.index].uri };
+    const source = { uri: this.state.PLAYLIST[this.index].uri };
     const initialStatus = {
       shouldPlay: playing,
       rate: this.state.rate,
@@ -196,7 +195,7 @@ export default class App extends React.Component {
       // androidImplementation: 'MediaPlayer',
     };
 
-    if (PLAYLIST[this.index].isVideo) {
+    if (this.state.PLAYLIST[this.index].isVideo) {
       console.log(this._onPlaybackStatusUpdate);
       await this._video.loadAsync(source, initialStatus);
       // this._video.onPlaybackStatusUpdate(this._onPlaybackStatusUpdate);
@@ -231,9 +230,9 @@ export default class App extends React.Component {
       });
     } else {
       this.setState({
-        playbackInstanceName: PLAYLIST[this.index].name,
-        showVideo: PLAYLIST[this.index].isVideo,
-        isLoading: false
+        playbackInstanceName: this.state.PLAYLIST[this.index].name,
+        showVideo: this.state.PLAYLIST[this.index].isVideo,
+        isLoading: this.state.false
       });
     }
   }
