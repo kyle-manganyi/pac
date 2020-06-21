@@ -7,9 +7,9 @@ import useCachedResources from './hooks/useCachedResources';
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
 import player from './components/players/player'
-import profile from './screens/Profile'
-
 import LoginScreen from './screens/LoginScreen'
+import Register from './screens/RegisterScreen'
+import ResetPassword from './screens/ForgotPassword'
 
 const Stack = createStackNavigator();
 
@@ -22,11 +22,13 @@ export default function App(props) {
     return (
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
-        <NavigationContainer linking={LinkingConfiguration}>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <NavigationContainer linking={LinkingConfiguration} ini>
+          <Stack.Navigator initialRouteName={"login"} screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Root" component={BottomTabNavigator} />
-            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="login" component={LoginScreen} />
+            <Stack.Screen name="register" component={Register} />
             <Stack.Screen name="player" component={player} />
+            <Stack.Screen name="resetpassword" component={ResetPassword} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>

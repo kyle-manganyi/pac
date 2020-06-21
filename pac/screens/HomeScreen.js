@@ -7,19 +7,20 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ScrollView
+  ScrollView,
+  ActivityIndicator,
+  AsyncStorage
 } from "react-native";
 import Searchbar from "../components/searchbar/searchbar";
 import Carousel from "../components/carousel/carousel";
 import Colors from "../constants/Colors";
-import Preview from "../components/midVideoPreview/midVideoPreview"
+import Preview from "../components/midVideoPreview/midVideoPreview";
 import { FontAwesome } from "@expo/vector-icons";
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+
 
 export default function HomeScreen({ navigation }) {
-
   const [episodes, setEpisodes] = React.useState();
+  const [user, setUser] = React.useState();
   React.useEffect(() => {
     fetch(`https://kpopapi.herokuapp.com/api/episode`, {
       method: "GET",
@@ -32,14 +33,13 @@ export default function HomeScreen({ navigation }) {
       .catch(err => {
         return console.log("not now  " + err);
       });
-  },[]);
+  }, []);
 
-  console.log(episodes)
   return (
     <View style={styles.container}>
       <View style={{ flex: 1 }}>
         <Searchbar></Searchbar>
-        <View style={{ height: 200 }}>
+        <View style={{ height: "30%" }}>
           <Carousel />
         </View>
         <View
@@ -47,12 +47,11 @@ export default function HomeScreen({ navigation }) {
             flexDirection: "row",
             marginHorizontal: "25%",
             justifyContent: "space-between",
-            marginTop: 15
+            marginTop: 10,
+            shadowColor: "#000"
           }}
         >
-          <TouchableOpacity
-            style={{ height: 40, borderRadius: 24, alignItems: "center" }}
-          >
+          <View style={{ height: 40, borderRadius: 24, alignItems: "center" }}>
             <Text
               style={{
                 color: Colors.tabIconSelected,
@@ -62,24 +61,25 @@ export default function HomeScreen({ navigation }) {
             >
               35K
             </Text>
-          </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={{
               height: 40,
               borderRadius: 10,
               alignItems: "center",
               marginBottom: 10,
-              backgroundColor: Colors.tabIconSelected,
+              backgroundColor: "black",
               marginLeft: "10%",
-              marginRight: "10%"
+              marginRight: "10%",
+              justifyContent: "center"
             }}
           >
             <Text
               style={{
                 color: "white",
-                padding: 7,
+                alignSelf: "center",
                 paddingHorizontal: 20,
-                fontSize: 18
+                fontSize: 15
               }}
             >
               subscribe
@@ -90,7 +90,7 @@ export default function HomeScreen({ navigation }) {
           >
             <FontAwesome
               name={"bell"}
-              size={30}
+              size={25}
               color={Colors.tabIconSelected}
               style={{ marginTop: 7 }}
             />
@@ -102,7 +102,7 @@ export default function HomeScreen({ navigation }) {
               flexDirection: "row",
               justifyContent: "space-between",
               marginHorizontal: "5%",
-              marginVertical:10,
+              marginVertical: 10,
               flex: 3
             }}
           >
@@ -122,56 +122,63 @@ export default function HomeScreen({ navigation }) {
                   color: Colors.tabIconSelected,
                   fontSize: 18
                 }}
-              >
-              </Text>
+              ></Text>
             </TouchableOpacity>
           </View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          { episodes && episodes.map( e => (
-            <TouchableOpacity style={{width:250, marginHorizontal:10}} onPress={() => navigation.navigate('player', e)}>
-              {
-                e !== undefined || {} ?  <Preview episode={e}/> : null
+            {episodes ?
+              episodes.map(e => (
+                <TouchableOpacity
+                  style={{ width: 250, marginHorizontal: 10 }}
+                  onPress={() => navigation.navigate("player", {episde:e,episodes:episodes})}
+                >
+                  {e !== undefined || {} ? <Preview episode={e} /> : null}
+                </TouchableOpacity>
+              )):
+              <ActivityIndicator
+              style = {{marginLeft:100}}
+              animating = {true}
+              color = '#bc2b78'
+              size = "large"/>
               }
-            </TouchableOpacity>    
-          ))}  
+              
           </ScrollView>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginHorizontal: "5%",
-              marginVertical:10,
-              flex: 3
-            }}
-          >
-            <TouchableOpacity>
-              <Text
-                style={{
-                  color: Colors.tabIconSelected,
-                  fontSize: 18
-                }}
-              >
-                watch again
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text
-                style={{
-                  color: Colors.tabIconSelected,
-                  fontSize: 18
-                }}
-              >
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <TouchableOpacity style={{width:250, marginHorizontal:10}}>
-              <Preview/>
-            </TouchableOpacity>
-            <TouchableOpacity style={{width:250, marginHorizontal:10}}>
-              <Preview/>
-            </TouchableOpacity>
-          </ScrollView>
+        {/* <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginHorizontal: "5%",
+            marginVertical: 10,
+            flex: 3
+          }}
+        >
+          <TouchableOpacity>
+            <Text
+              style={{
+                color: Colors.tabIconSelected,
+                fontSize: 18
+              }}
+            >
+              watch again
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text
+              style={{
+                color: Colors.tabIconSelected,
+                fontSize: 18
+              }}
+            ></Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity style={{ width: 250, marginHorizontal: 10 }}>
+            <Preview />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ width: 250, marginHorizontal: 10 }}>
+            <Preview />
+          </TouchableOpacity>
+        </ScrollView> */}
         </ScrollView>
       </View>
     </View>
@@ -187,7 +194,7 @@ const styles = StyleSheet.create({
     height: "100%",
     flex: 1,
     backgroundColor: "#fff",
-    marginTop: 25
+    marginTop: 40
   },
   developmentModeText: {
     marginBottom: 20,

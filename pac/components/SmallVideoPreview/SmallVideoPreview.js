@@ -1,31 +1,30 @@
 import * as React from 'react'
 import { StyleSheet, View,Text,ImageBackground } from 'react-native'
+import moment from "moment";
 
-const image = { uri: "https://reactjs.org/logo-og.png" }
-
-const SmallVidePreview = () => {
+const SmallVidePreview = (props) => {
     return (
         <View style={styles.container}>
-            <ImageBackground source={image} style={styles.image}>
-                <Text style={styles.text}></Text>
+            <ImageBackground source={{uri: props.episode.poster}} style={styles.image}>
+                <Text ></Text>
             </ImageBackground>
 
             <View style={styles.description}>
                 <Text style={{fontWeight: '200',color:"#fff"}}>
-                    Lorem ipsum dolor sit amet, consectetur
+                    {props.episode !== undefined ? props.episode.description:"blank"}
                 </Text>
                 <View style={styles.poddetails}>
-                    <Text style={styles.nums}>Pod ipsum dolor</Text>
+                    <Text style={styles.nums}>{props.episode !== undefined ? props.episode.title:"blank"}</Text>
                     <Text style={{paddingVertical: 2,}}>
-                    <Text style={styles.nums}> 4.9M views </Text>
+                    <Text style={styles.nums}> {props.episode.views} views </Text>
                     <Text> - </Text>
-                    <Text style={styles.nums}> 5 Days Ago </Text> 
+                    <Text style={styles.nums}>{moment(props.episode.date).format("DD MMM YYYY")} </Text> 
                 </Text>
                 </View>
             </View>
-            <Text style={styles.duration}>
+            {/* <Text style={styles.duration}>
                 45.59
-            </Text>
+            </Text> */}
             <View style={{borderBottomWidth: .7}}/>
         </View>
     )
@@ -37,7 +36,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "row",
-        height: '100%'
+        height: '100%',
+        marginTop: 10,
+        height:75
     },
     image: {
       resizeMode: "cover",
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     poddetails: {
         fontWeight: '100',
         fontSize: 40,
-        color:"#fff"
+        color:"#fff",
         // flexDirection: 'row',
         // alignItems: 'stretch'
     },

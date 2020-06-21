@@ -1,31 +1,158 @@
 import * as WebBrowser from "expo-web-browser";
 import * as React from "react";
-import { View, TouchableOpacity, Text, ImageBackground } from "react-native";
+import { View, TouchableOpacity, Text, ImageBackground, Keyboard,TouchableWithoutFeedback, KeyboardAvoidingView, AsyncStorage } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import MyVideoPlayer from "./videoplayer";
 import MyAudioPlayer from "./audioplayer";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
+import useForceUpdate from 'use-force-update';
 import Comment from "../comment/comment";
 import Next from "../SmallVideoPreview/SmallVideoPreview";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useKeepAwake } from 'expo-keep-awake';
 
-const player = ({route,navigation}) => {
+  
+const  player = ({route,navigation}) => {
   const [hide, setHide] = React.useState(true);
+  const [episode, setEpisode] = React.useState(route.params.episde);
   const [component, setcomponent] = React.useState("next");
   const [player, setPlayer] = React.useState("video");
-  const image = { uri: "https://reactjs.org/logo-og.png" };
-  const episode = route.params
+  const [comment, setComment] = React.useState("");
+  const [comments, setComments] = React.useState([]);
+  const episodes = route.params.episodes
+  const [user, setUser] = React.useState(undefined);
+  const [episodeLiked, setEpisodeLiked] = React.useState(false)
   
+  React.useEffect(() => {
+    AsyncStorage.getItem('user').then(
+      value =>{
+        if(value){
+          setUser(JSON.parse(value))
+          checkLiked(JSON.parse(value))
+        }
+      }
+    );
+    viewEpisode()
+  }, []);
+
+  const checkLiked = (user) => {
+    fetch(`https://kpopapi.herokuapp.com/api/episode/user-liked-episode?episode=${episode.id}&userid=${user.id}`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        setEpisodeLiked(result)
+      })
+      .catch(err => {
+      });
+  }
+
+  const updateEpisode = (newepisode) => {
+    setEpisode(newepisode)
+    setPlayer("")
+    setTimeout( () => {
+      setPlayer(player)
+   },20);
+  }
+
+  const getComments = () => {
+    const url = `https://kpopapi.herokuapp.com/api/episode/get-comment/${episode.id}`;
+    return fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        setComments(result)
+        setcomponent("comment")
+      })
+      .catch(err => {
+        console.log("error", err)
+      });
+  }
+
+  const postComment = (comment) => {
+
+    setComment("")
+    let commentobj = {
+      "username":user.username,
+      "comment":comment,
+      "date": new Date()
+    }
+
+    setComments([...comments, commentobj])
+    const url = `https://kpopapi.herokuapp.com/api/episode/comment?userid=${user.id}&episode=${episode.id}&comment=${comment}`;
+    return fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        console.log(result)
+      })
+      .catch(err => {
+        console.log("error", err)
+      });
+
+  }
+
+  const likeEpisode = () => {
+    
+    fetch(`https://kpopapi.herokuapp.com/api/episode/like?episode=${episode.id}&user=${user.id}`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        setEpisode(result)
+        setEpisodeLiked(!episodeLiked)
+      })
+      .catch(err => {
+       console.log("error")
+      });
+  }
+  const viewEpisode = () => {
+    fetch(`https://kpopapi.herokuapp.com/api/episode/view?episode=${episode.id}`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        setEpisode(result)
+      })
+      .catch(err => {
+       
+      });
+  }
+  useKeepAwake();
+
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={{ flex: 1 }}>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           marginHorizontal: 15,
-          marginTop: 25
+          marginTop: 40
         }}
       >
         <TouchableOpacity
@@ -35,14 +162,13 @@ const player = ({route,navigation}) => {
             name={"arrow-left"}
             size={30}
             color={Colors.tabIconSelected}
-            style={{ marginTop: 7 }}
           />
         </TouchableOpacity>
 
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
             style={{
-              width: 100,
+              width: 75,
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: Colors.tabIconSelected
@@ -56,7 +182,7 @@ const player = ({route,navigation}) => {
             onPress={() => setPlayer("audio")}
             style={{
               backgroundColor: "#ffff",
-              width: 100,
+              width: 75,
               justifyContent: "center",
               alignItems: "center"
             }}
@@ -71,16 +197,15 @@ const player = ({route,navigation}) => {
         <TouchableOpacity>
           <FontAwesome
             name={"search"}
-            size={20}
+            size={30}
             color={Colors.tabIconSelected}
-            style={{ marginTop: 7 }}
           />
         </TouchableOpacity>
       </View>
 
-      {player === "video" ? null : (
+      {player === "video" ?null:player === "audio" ? (
         <ImageBackground
-          source={image}
+          source={{uri:episode.poster}}
           style={{
             width: 150,
             height: 150,
@@ -88,9 +213,9 @@ const player = ({route,navigation}) => {
             marginTop: 20
           }}
         >
-          <Text>Play</Text>
+          <Text></Text>
         </ImageBackground>
-      )}
+      ):null}
 
       <View
         style={{
@@ -100,17 +225,18 @@ const player = ({route,navigation}) => {
           flex:  player === "video"? 0:0
         }}
       >
-        {player === "video" ? <MyVideoPlayer video={episode.video} /> : <MyAudioPlayer video={episode.video} />}
-        {hide ? (
+        {player === "video" ? <MyVideoPlayer video={episode.video} /> : player === "audio" ? <MyAudioPlayer video={episode.video} /> : null}
+        {hide? (
           <View style={{ marginTop: 10, marginHorizontal: 10 }}>
-            <Text style={{ color: Colors.tabIconSelected, fontSize: 18 }}>
+            <Text style={{ color: Colors.tabIconSelected, fontSize: 18 ,fontWeight:"400"}}>
               {episode.description}
             </Text>
             <Text
               style={{
                 marginTop: 5,
                 color: Colors.tabIconSelected,
-                fontSize: 12
+                fontSize: 12,
+                fontWeight:"400"
               }}
             >
               {episode.views} Views
@@ -123,48 +249,48 @@ const player = ({route,navigation}) => {
                 marginTop: 15
               }}
             >
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }} onPress={() => likeEpisode()}>
                 <FontAwesome
                   name={"thumbs-up"}
-                  size={25}
-                  color={Colors.tabIconSelected}
+                  size={20}
+                  color={episodeLiked? "#000": Colors.tabIconSelected}
                 />
-                <Text>{episode.like}</Text>
-              </View>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text style={{fontWeight:"200"}}>{episode.like}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome
                   name={"thumbs-down"}
-                  size={25}
+                  size={20}
                   color={Colors.tabIconSelected}
                 />
-                <Text>{episode.id}</Text>
-              </View>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text style={{fontWeight:"200"}}>{episode.dislikes}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome
                   name={"share"}
-                  size={25}
+                  size={20}
                   color={Colors.tabIconSelected}
                 />
-                <Text>share</Text>
-              </View>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text style={{fontWeight:"200"}}>Share</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome
                   name={"download"}
-                  size={25}
+                  size={20}
                   color={Colors.tabIconSelected}
                 />
-                <Text>download</Text>
-              </View>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text style={{fontWeight:"200"}}>Download</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}>
                 <FontAwesome
                   name={"plus"}
-                  size={25}
+                  size={20}
                   color={Colors.tabIconSelected}
                 />
-                <Text>save</Text>
-              </View>
-            </View>
-            <View
+                <Text style={{fontWeight:"200"}}>Save</Text>
+              </TouchableOpacity>
+            </View>  
+            {/* <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
@@ -227,27 +353,58 @@ const player = ({route,navigation}) => {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </View> */}
           </View>
-        ) : null}
-
+          
+        ) : <View/>}
+        
         <View
           style={{
             backgroundColor: Colors.tabIconSelected,
-            marginTop: player === "video"? 15 : 30,
+            marginTop: player === "video"? 5 : 30,
             flexGrow: 1,
             flex: 1
           }}
         >
-          <TouchableOpacity onPress={() => setHide(!hide)}>
+
+          <KeyboardAvoidingView>
+          <View style={{
+               borderColor: Colors.tabIconSelected,
+               height: 40,
+               flexDirection: "row",
+               justifyContent:"center",
+               alignItems:"center",
+               backgroundColor:"white"
+            }}>
+                <TextInput 
+                    placeholder={'Comment'}
+                    style={{width:"85%", borderBottomColor:"white", borderBottomWidth: 1,}}
+                    onChangeText={ text => setComment(text) }
+                    value={comment}
+                    onFocus={() => setHide(false)}
+                    onEndEditing={()=> setHide(true)}
+                />
+                <TouchableOpacity onPress={() => postComment(comment)}>
+                  <FontAwesome
+                      name={"paper-plane"}
+                      size={25}
+                      style={{alignSelf:"center", marginHorizontal:10}}
+                      color={Colors.tabIconSelected}
+                  />
+                </TouchableOpacity>
+               
+          </View> 
+          </KeyboardAvoidingView>
+
+          <TouchableOpacity onPress={() => setHide(!hide)} style={{width:40, alignSelf: "center", height:30}}>
             <View
               style={{
                 borderBottomColor: "white",
                 borderBottomWidth: 5,
                 alignSelf: "center",
                 width: 30,
-                height: 25,
-                paddingTop: 10
+                paddingTop: 13,
+                justifyContent:"center"
               }}
             />
           </TouchableOpacity>
@@ -279,34 +436,40 @@ const player = ({route,navigation}) => {
                 alignItems: "center",
                 backgroundColor: component === "comment" ? "white" : "teal"
               }}
-              onPress={() => setcomponent("comment")}
+              onPress={() =>getComments()}
             >
-              <Text>Comment</Text>
+              <Text>Comments</Text>
             </TouchableOpacity>
           </View>
-          <ScrollView style={{ marginHorizontal: "5%", marginVertical: 10 }}>
+          <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: "5%", marginBottom:100}}>
             {component === "comment" ? (
               <View>
-                <Comment></Comment>
-                <Comment></Comment>
-                <Comment></Comment>
-                <Comment></Comment>
-                <Comment></Comment>
-              </View>
+              {comments &&
+             comments.reverse().map(e => (
+               <TouchableOpacity
+               >
+                 <Comment
+                 comment={e}></Comment>
+               </TouchableOpacity>
+             ))}
+             </View>
             ) : (
               <View>
-                <Next></Next>
-                <Next></Next>
-                <Next></Next>
-                <Next></Next>
-                <Next></Next>
-                <Next></Next>
+               {episodes &&
+              episodes.map(e => (
+                <TouchableOpacity
+                  onPress={() => updateEpisode(e)}
+                >
+                  {e !== undefined || {} ? <Next episode={e} /> : null}
+                </TouchableOpacity>
+              ))}
               </View>
             )}
           </ScrollView>
         </View>
       </View>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 

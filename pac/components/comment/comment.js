@@ -1,7 +1,9 @@
 import * as React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
-const comment = () => {
+import moment from "moment";
+
+const comment = (comment) => {
   return (
     <View
       style={{
@@ -13,16 +15,15 @@ const comment = () => {
       <View style={{marginLeft:10}}>
         <View style={{ flexDirection: "row" }}>
           <Text style={{ fontSize: 18, color: "#fff" }}>
-            Podcast
+            {comment.comment.username}
           </Text>
           <Text style={{ fontSize: 9, marginLeft: 50, color: "#fff" }}>
-            {" "}
-            3 monts ago
+          {moment(comment.comment.date).format("DD MMM YYYY")}
           </Text>
         </View>
 
         <Text style={{ fontSize: 18,color: "#fff", maxWidth:"95%" }}>
-          this is the comment and it is a lil bit long but its not the longest
+          {comment.comment.comment}
         </Text>
       </View>
     </View>

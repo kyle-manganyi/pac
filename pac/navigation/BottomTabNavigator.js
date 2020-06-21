@@ -5,11 +5,6 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import Profile from '../screens/Profile';
 import Notifications from '../screens/notification';
-
-
-
-import RegisterScreen from '../screens/RegisterScreen'
-
 import ExploreScreen from '../screens/ExploreScreen'
 
 const BottomTab = createBottomTabNavigator();
@@ -21,19 +16,18 @@ export default function BottomTabNavigator({ navigation, route }) {
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} 
+        tabBarOptions={{
+          keyboardHidesTabBar: true
+
+        }}
+      >
       <BottomTab.Screen
         name="Home"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="home" />,
-        }}
-      />
-      <BottomTab.Screen
-        name="notification"
-        component={Notifications}
-        options={{
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="bell" />,
+          
         }}
       />
       <BottomTab.Screen
@@ -42,17 +36,11 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="play-circle" />,
         }}
+        tab
       />
       <BottomTab.Screen
-        name="shop"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="shopping-bag" />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Register"
-        component={RegisterScreen}
+        name="Profile"
+        component={Profile}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="user" />,
         }}

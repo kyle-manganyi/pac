@@ -23,8 +23,8 @@ const Searchbar = ()  => {
             />
             <FontAwesome
                 name={"search"}
-                size={30}
-                style={{marginTop:5}}
+                size={25}
+                style={{alignSelf:"center"}}
                 color={Colors.tabIconSelected}
             />
       </View>   
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
         lineHeight: 50,
         height: 50,
         flexDirection: "row",
+        justifyContent:"center"
       }
 })
 

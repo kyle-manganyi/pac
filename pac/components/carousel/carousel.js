@@ -26,7 +26,7 @@ const ENTRIES1 = [
     illustration: 'https://i.imgur.com/2nCt3Sbl.jpg',
   },
 ];
-const {width: screenWidth} = Dimensions.get('window');
+const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
 const MyCarousel = props => {
   const [entries, setEntries] = useState([]);
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   item: {
     width: screenWidth - 80,
-    height: 200,
+    height: screenHeight * 0.28
   },
   imageContainer: {
     flex: 1,

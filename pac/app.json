@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "pac",
-    "slug": "pac",
+    "name": "Streamz",
+    "slug": "Streamz",
     "platforms": [
       "ios",
       "android",
@@ -14,7 +14,7 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,7 +23,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      }
+    },
+    "android": {
+      "package": "com.bos.Streamz"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

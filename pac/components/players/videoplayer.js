@@ -11,13 +11,15 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  View,
+  KeyboardAvoidingView
 } from "react-native";
 import { Asset } from "expo-asset";
 import { Audio, Video } from "expo-av";
 import * as Font from "expo-font";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+
 console.disableYellowBox = true;
 
 
@@ -122,7 +124,6 @@ const VIDEO_CONTAINER_HEIGHT = (DEVICE_HEIGHT * 0.3)
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props)
     this.index = 0;
     this.isSeeking = false;
     this.shouldPlayAtEndOfSeek = false;
@@ -166,7 +167,8 @@ export default class App extends React.Component {
       interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
       playsInSilentModeIOS: true,
       shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
+      playThroughEarpieceAndroid: false
     });
     (async () => {
       await Font.loadAsync({
@@ -197,7 +199,6 @@ export default class App extends React.Component {
     };
 
     if (this.state.PLAYLIST[this.index].isVideo) {
-      console.log(this._onPlaybackStatusUpdate);
       await this._video.loadAsync(source, initialStatus);
       // this._video.onPlaybackStatusUpdate(this._onPlaybackStatusUpdate);
       this.playbackInstance = this._video;
@@ -253,8 +254,8 @@ export default class App extends React.Component {
         shouldCorrectPitch: status.shouldCorrectPitch
       });
       if (status.didJustFinish && !status.isLooping) {
-        this._advanceIndex(true);
-        this._updatePlaybackInstanceForIndex(true);
+        // this._advanceIndex(true);
+        // this._updatePlaybackInstanceForIndex(true);
       }
     } else {
       if (status.error) {
@@ -302,7 +303,7 @@ export default class App extends React.Component {
 
   _advanceIndex(forward) {
     this.index =
-      (this.index + (forward ? 1 : PLAYLIST.length - 1)) % PLAYLIST.length;
+      (this.index + (forward ? 1 : this.state.PLAYLIST.length - 1)) % this.state.PLAYLIST.length;
   }
 
   async _updatePlaybackInstanceForIndex(playing) {
@@ -470,21 +471,6 @@ export default class App extends React.Component {
      },5000);
   }
 
-  _onSpeakerPressed = () => {
-    this.setState(
-      state => {
-        return { throughEarpiece: !state.throughEarpiece };
-      },
-      ({ throughEarpiece }) =>
-        Audio.setAudioModeAsync({
-          allowsRecordingIOS: false,
-          interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-          playsInSilentModeIOS: true,
-          shouldDuckAndroid: true,
-          interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX
-        })
-    );
-  };
 
   render() {
     return !this.state.fontLoaded ? (
@@ -511,11 +497,13 @@ export default class App extends React.Component {
             onFullscreenUpdate={this._onFullscreenUpdate}
             onReadyForDisplay={this._onReadyForDisplay}
             useNativeControls={this.state.useNativeControls}
+            onTouchStart={() =>this._onControls()}
           />
         </View>
         </TouchableWithoutFeedback>
         {
-            this.state.showControls ? <View
+            this.state.showControls ? 
+          <View
             style={[
               styles.buttonsContainerBase,
               styles.buttonsContainerTopRow,
@@ -622,7 +610,9 @@ export default class App extends React.Component {
               {this._getTimestamp()}
             </Text>
           </View>
-        </View> : null}
+        </View> : <TouchableHighlight onPress={() =>this._onControls()}>
+          <View style={{height:this.state.videoHeight, width: this.state.videoWidth}}></View>
+          </TouchableHighlight>}
       </View>
     );
   }

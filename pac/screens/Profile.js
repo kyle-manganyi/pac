@@ -6,11 +6,29 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  AsyncStorage,
+  TouchableWithoutFeedback
 } from "react-native";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 
-const profile = () => {
+const profile = ({navigation}) => {
+
+  const [user, setUser] = React.useState(undefined);
+  AsyncStorage.getItem('user').then(
+    value =>{
+      if(value){
+        setUser(JSON.parse(value))
+      }
+    }
+  );
+
+  const _logout= () =>{
+    AsyncStorage.removeItem("user")
+    navigation.navigate('login')
+  }
+ 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
       <Text style={{ alignSelf: "center", fontSize: 35 }}>Profile</Text>
 
@@ -19,16 +37,29 @@ const profile = () => {
       </View>
 
       <View style={styles.loginform}>
-        <TextInput style={styles.input} onBlur={() => Keyboard.dismiss} />
-        <TextInput style={styles.input} onBlur={() => Keyboard.dismiss} />
-        <TextInput style={styles.input} onBlur={() => Keyboard.dismiss} />
+        {
+          user ? 
+          <View>
+          <TextInput style={styles.input} onBlur={() => Keyboard.dismiss} placeholder={user.username} />
+          <TextInput style={styles.input} onBlur={() => Keyboard.dismiss} placeholder={user.email}/>
+          <TextInput style={styles.input} onBlur={() => Keyboard.dismiss} placeholder={user.password}/>
+          </View>
+          :null
+        }
+        
       </View>
       <TouchableOpacity style={{ marginTop: 24 }}>
         <View style={styles.btnlogin}>
-          <Text style={styles.btntext}>Updated</Text>
+          <Text style={styles.btntext}>Update</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity style={{ marginTop: 24 }} onPress={() => _logout()}>
+        <View style={styles.btnlogin}>
+          <Text style={styles.btntext}>Logout</Text>
         </View>
       </TouchableOpacity>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 
