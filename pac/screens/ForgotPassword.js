@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  ActivityIndicator
+  ActivityIndicator,
+  Image
 } from "react-native";
 
 const LoginScreen = ({ navigation }) => {
@@ -44,7 +45,16 @@ const LoginScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <Text style={styles.heading}>Reset Passowrd</Text>
+      <Image
+          source={require("../assets/images/splash.png")}
+          style={{
+            resizeMode: "center",
+            height: 100,
+            width: 200,
+            alignSelf: "center"
+          }}
+        />
+        <Text style={styles.heading}>REGISTER</Text>
 
         {loader ? (
           <View
@@ -90,16 +100,11 @@ const LoginScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
         <View
-          style={{
-            paddingTop: 18,
-            paddingLeft: 18,
-            fontWeight: "300",
-            flexDirection: "row"
-          }}
+          style={{ paddingTop: 18, paddingLeft: 18, flexDirection: "row", justifyContent:"center" }}
         >
-          <Text>remember password? </Text>
+          <Text  style={{ color: "#fff", fontWeight: "100" }}>remember password? </Text>
           <TouchableOpacity onPress={() => navigation.navigate("login")}>
-            <Text>Sign In</Text>
+            <Text style={{ color: "#FE2851", marginLeft: 5 }}>Sign In</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -112,38 +117,43 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 140
+    paddingVertical: 100,
+    flex:1,
+    backgroundColor:"#131212"
   },
   loginform: {
     paddingHorizontal: 12
   },
   heading: {
     textAlign: "center",
-    fontSize: 40,
+    fontSize: 20,
     fontWeight: "400",
-    paddingVertical: 8
+    paddingVertical: 8,
+    marginTop: 20,
+    color: "#fff",
+    opacity: 0.8
   },
   input: {
-    padding: 12,
-    height: 55,
-    borderColor: "lightgray",
-    borderWidth: 2,
-    fontSize: 24,
+    paddingLeft: 12,
+    height: 40,
+    backgroundColor: "#232524",
+    fontSize: 16,
     fontWeight: "200",
-    textAlignVertical: "center",
-    marginVertical: 4,
-    borderRadius: 5
+    marginVertical: 15,
+    borderRadius: 5,
+    color: "#fff"
   },
   btnlogin: {
-    borderWidth: 1,
-    borderRadius: 5
+    borderRadius: 5,
+    backgroundColor: "#951FC0"
   },
   btntext: {
     textAlign: "center",
     fontSize: 20,
-    fontWeight: "600",
-    padding: 12,
-    backgroundColor: "gray",
-    color: "#f2f2f2"
+    backgroundColor: "#951FC0",
+    color: "black",
+    height: 40,
+    alignContent: "center",
+    paddingTop: 5
   }
 });

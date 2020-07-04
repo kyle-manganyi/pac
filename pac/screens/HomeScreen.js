@@ -17,10 +17,13 @@ import Colors from "../constants/Colors";
 import Preview from "../components/midVideoPreview/midVideoPreview";
 import { FontAwesome } from "@expo/vector-icons";
 
-
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const [episodes, setEpisodes] = React.useState();
-  const [user, setUser] = React.useState();
+  const [watchedEpisodes, setWatchedEpisodes] = React.useState([]);
+  const [savedEpisodes, setSavedEpisodes] = React.useState([]);
+  const [user, setUser] = React.useState(undefined);
+  const [ContentCreator, SetContentCreator] = React.useState()
+
   React.useEffect(() => {
     fetch(`https://kpopapi.herokuapp.com/api/episode`, {
       method: "GET",
@@ -33,168 +36,316 @@ export default function HomeScreen({ navigation }) {
       .catch(err => {
         return console.log("not now  " + err);
       });
+
+      fetch(`https://kpopapi.herokuapp.com/api/ContentCreater/get-creators`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => SetContentCreator(result))
+      .catch(err => {
+        return console.log("not now  " + err);
+      });
+    AsyncStorage.getItem("user").then(value => {
+      if (value) {
+        setUser(JSON.parse(value));
+        getWatched(JSON.parse(value));
+        getSaved(JSON.parse(value));
+      }
+    });
   }, []);
 
+  getWatched = user => {
+    fetch(
+      `https://kpopapi.herokuapp.com/api/episode/get-watched?userid=${user.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    )
+      .then(res => res.json())
+      .then(result => setWatchedEpisodes(result))
+      .catch(err => {
+        return console.log("not now  " + err);
+      });
+  };
+  getSaved = user => {
+    fetch(
+      `https://kpopapi.herokuapp.com/api/episode/get-saved?userid=${user.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    )
+      .then(res => res.json())
+      .then(result => setSavedEpisodes(result))
+      .catch(err => {
+        return console.log("not now  " + err);
+      });
+  };
+
+  
   return (
+    <View style={{flex:1, backgroundColor:"#131212"}}>
     <View style={styles.container}>
-      <View style={{ flex: 1 }}>
-        <Searchbar></Searchbar>
-        <View style={{ height: "30%" }}>
-          <Carousel />
-        </View>
-        <View
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          borderBottomWidth: 2,
+          borderBottomLeftRadius: 5,
+          borderBottomRightRadius: 5,
+          borderBottomColor: "#FE2851"
+        }}
+      >
+        <Image
+          source={require("../assets/images/homeLogo.png")}
           style={{
-            flexDirection: "row",
-            marginHorizontal: "25%",
-            justifyContent: "space-between",
-            marginTop: 10,
-            shadowColor: "#000"
+            height: 100,
+            width: 200
           }}
+        />
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Home", { update: true })}
+          style={{ height: 100, justifyContent: "center", marginRight: 15 }}
         >
-          <View style={{ height: 40, borderRadius: 24, alignItems: "center" }}>
-            <Text
-              style={{
-                color: Colors.tabIconSelected,
-                paddingTop: 7,
-                fontSize: 18
-              }}
-            >
-              35K
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={{
-              height: 40,
-              borderRadius: 10,
-              alignItems: "center",
-              marginBottom: 10,
-              backgroundColor: "black",
-              marginLeft: "10%",
-              marginRight: "10%",
-              justifyContent: "center"
-            }}
-          >
-            <Text
-              style={{
-                color: "white",
-                alignSelf: "center",
-                paddingHorizontal: 20,
-                fontSize: 15
-              }}
-            >
-              subscribe
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ height: 40, borderRadius: 24, alignItems: "center" }}
-          >
-            <FontAwesome
-              name={"bell"}
-              size={25}
-              color={Colors.tabIconSelected}
-              style={{ marginTop: 7 }}
-            />
-          </TouchableOpacity>
-        </View>
+          <FontAwesome
+            name={"user-circle"}
+            size={40}
+            color={Colors.tabIconSelected}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={{ flex: 1, marginBottom: 20, marginTop: 10 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
+       
+            <View>
+              <Text
+                style={{
+                  color: Colors.tabIconSelected,
+                  fontSize: 18,
+                  marginHorizontal: "5%",
+                  marginBottom:15
+                }}
+              >
+                Discover
+              </Text>
+            </View>
+
+            <Carousel />
+
+
+
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
               marginHorizontal: "5%",
-              marginVertical: 10,
+              marginVertical: 15,
               flex: 3
             }}
           >
-            <TouchableOpacity>
               <Text
                 style={{
                   color: Colors.tabIconSelected,
                   fontSize: 18
                 }}
               >
-                Trending
+                Featured
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("all-explore-channel", {
+                  episodes: episodes
+                })
+              }
+            >
               <Text
                 style={{
-                  color: Colors.tabIconSelected,
+                  color: "#FE2851",
                   fontSize: 18
                 }}
-              ></Text>
+              >All  <FontAwesome
+              name={"chevron-right"}
+              size={18}
+              color="#FE2851"
+            /></Text>
             </TouchableOpacity>
           </View>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {episodes ?
-              episodes.map(e => (
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginBottom:5}}>
+            {ContentCreator ? (
+              ContentCreator.map(e => (
                 <TouchableOpacity
-                  style={{ width: 250, marginHorizontal: 10 }}
-                  onPress={() => navigation.navigate("player", {episde:e,episodes:episodes})}
+                  style={{ marginHorizontal: 10, marginTop:5 }}
+                  key={e.id}
+                  onPress={() =>
+                    navigation.navigate("explore-channel", {
+                      episde: e
+                    })
+                  }
                 >
                   {e !== undefined || {} ? <Preview episode={e} /> : null}
                 </TouchableOpacity>
-              )):
+              ))
+            ) : (
               <ActivityIndicator
-              style = {{marginLeft:100}}
-              animating = {true}
-              color = '#bc2b78'
-              size = "large"/>
-              }
-              
+                style={{ marginLeft: 100 }}
+                animating={true}
+                color="#bc2b78"
+                size="large"
+              />
+            )}
           </ScrollView>
-        {/* <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginHorizontal: "5%",
-            marginVertical: 10,
-            flex: 3
-          }}
-        >
-          <TouchableOpacity>
-            <Text
-              style={{
-                color: Colors.tabIconSelected,
-                fontSize: 18
-              }}
-            >
-              watch again
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text
-              style={{
-                color: Colors.tabIconSelected,
-                fontSize: 18
-              }}
-            ></Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <TouchableOpacity style={{ width: 250, marginHorizontal: 10 }}>
-            <Preview />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ width: 250, marginHorizontal: 10 }}>
-            <Preview />
-          </TouchableOpacity>
-        </ScrollView> */}
+
+          {watchedEpisodes.length === 0 ? null : (
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginHorizontal: "5%",
+                  marginVertical: 20,
+                  flex: 3
+                }}
+              >
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      color: Colors.tabIconSelected,
+                      fontSize: 18
+                    }}
+                  >
+                    Recently Played
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                <Text
+                style={{
+                  color: "#FE2851",
+                  fontSize: 18
+                }}
+              >All  <FontAwesome
+              name={"chevron-right"}
+              size={18}
+              color="#FE2851"
+            /></Text>
+                </TouchableOpacity>
+              </View>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                style={{marginBottom:5}}
+              >
+                {watchedEpisodes ? (
+                  watchedEpisodes.map(e => (
+                    <TouchableOpacity
+                      style={{marginHorizontal: 10, marginTop:5 }}
+                      key={e.id}
+                      onPress={() =>
+                        navigation.navigate("explore-channel", {
+                          episde: e,
+                          episodes: watchedEpisodes
+                        })
+                      }
+                    >
+                      {e !== undefined || {} ? <Preview episode={e} /> : null}
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <ActivityIndicator
+                    style={{ marginLeft: 100 }}
+                    animating={true}
+                    color="#bc2b78"
+                    size="large"
+                  />
+                )}
+              </ScrollView>
+            </View>
+          )}
+
+          {savedEpisodes.length === 0 ? null : (
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginHorizontal: "5%",
+                  marginVertical: 20,
+                  flex: 3
+                }}
+              >
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      color: Colors.tabIconSelected,
+                      fontSize: 18
+                    }}
+                  >
+                    Saved
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                <Text
+                style={{
+                  color: "#FE2851",
+                  fontSize: 18
+                }}
+              >All  <FontAwesome
+              name={"chevron-right"}
+              size={18}
+              color="#FE2851"
+            /></Text>
+                </TouchableOpacity>
+              </View>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                style={{marginBottom:5}}
+              >
+                {savedEpisodes ? (
+                  savedEpisodes.map(e => (
+                    <TouchableOpacity
+                      style={{ marginHorizontal: 10 }}
+                      key={e.id}
+                      onPress={() =>
+                        navigation.navigate("explore-channel", {
+                          episde: e,
+                          episodes: savedEpisodes
+                        })
+                      }
+                    >
+                      {e !== undefined || {} ? <Preview episode={e} /> : null}
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <ActivityIndicator
+                    style={{ marginLeft: 100 }}
+                    animating={true}
+                    color="#bc2b78"
+                    size="large"
+                  />
+                )}
+              </ScrollView>
+            </View>
+          )}
         </ScrollView>
       </View>
+    </View>
     </View>
   );
 }
 
-HomeScreen.navigationOptions = {
-  header: null
-};
-
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
     flex: 1,
-    backgroundColor: "#fff",
-    marginTop: 40
+    backgroundColor: "#131212",
+    marginTop: 20
   },
   developmentModeText: {
     marginBottom: 20,

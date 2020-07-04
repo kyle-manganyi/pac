@@ -9,8 +9,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
-  AsyncStorage
+  AsyncStorage,
+  Image
 } from "react-native";
+import { CheckBox } from "react-native-elements";
 
 const RegisterScreen = ({ navigation }) => {
   const [fullname, onChangeFullname] = React.useState("");
@@ -19,6 +21,7 @@ const RegisterScreen = ({ navigation }) => {
   const [confirm, onChangeConfirm] = React.useState("");
   const [success, setSuccess] = React.useState(true);
   const [loader, setLoader] = React.useState(false);
+  const [check, setCheck] = React.useState(false);
 
   const _register = user => {
     setLoader(true);
@@ -62,7 +65,16 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView style={styles.container}>
-        <Text style={styles.heading}>Create an Account</Text>
+        <Image
+          source={require("../assets/images/splash.png")}
+          style={{
+            resizeMode: "center",
+            height: 100,
+            width: 200,
+            alignSelf: "center"
+          }}
+        />
+        <Text style={styles.heading}>REGISTER</Text>
 
         {loader ? (
           <View
@@ -120,12 +132,6 @@ const RegisterScreen = ({ navigation }) => {
                 </Text>
               </View>
             )}
-            <View style={{ paddingTop: 18, paddingLeft: 18 }}>
-              <Text style={{ fontWeight: "100", fontSize: 12 }}>
-                By creating an account, you agree to our Terms of Service and
-                Privacy Policy
-              </Text>
-            </View>
           </View>
         )}
 
@@ -144,10 +150,27 @@ const RegisterScreen = ({ navigation }) => {
             <Text style={styles.btntext}>Sign up</Text>
           </View>
         </TouchableOpacity>
-        <View style={{ paddingTop: 18, paddingLeft: 18, flexDirection: "row" }}>
-          <Text style={{ fontWeight: "200" }}>Already have an account? </Text>
+        <View style={{ paddingTop: 18 }}>
+          <CheckBox
+            title="Agree to the Terms of Service & Privacy Policy"
+            checked={check}
+            onIconPress={() => setCheck(!check)}
+            uncheckedColor="#FE2851"
+            checkedColor="#FE2851"
+            containerStyle={{
+              backgroundColor: "#131212",
+              borderWidth: 0,
+              height: 15,
+              width: "100%"
+            }}
+          />
+        </View>
+        <View style={{ paddingTop: 18, paddingLeft: 18, flexDirection: "row", justifyContent:"center" }}>
+          <Text style={{ color: "#fff", fontWeight: "100" }}>
+            Already have an account?{" "}
+          </Text>
           <TouchableOpacity onPress={() => navigation.navigate("login")}>
-            <Text>Sign In</Text>
+            <Text style={{ color: "#FE2851", marginLeft: 5 }}>Sign In</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -160,38 +183,43 @@ export default RegisterScreen;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 80
+    paddingVertical: 40,
+    flex: 1,
+    backgroundColor: "#131212"
   },
   loginform: {
-    paddingHorizontal: 28
+    paddingHorizontal: 12
   },
   heading: {
     textAlign: "center",
-    fontSize: 36,
-    fontWeight: "300",
-    paddingVertical: 8
+    fontSize: 20,
+    fontWeight: "400",
+    paddingVertical: 8,
+    marginTop: 20,
+    color: "#fff",
+    opacity: 0.8
   },
   input: {
-    padding: 12,
-    height: 55,
-    borderColor: "lightgray",
-    borderWidth: 2,
-    fontSize: 24,
+    paddingLeft: 12,
+    height: 40,
+    backgroundColor: "#232524",
+    fontSize: 16,
     fontWeight: "200",
-    textAlignVertical: "center",
-    marginVertical: 4,
-    borderRadius: 5
+    marginVertical: 15,
+    borderRadius: 5,
+    color: "#fff"
   },
   btnlogin: {
-    borderWidth: 1,
-    borderRadius: 5
+    borderRadius: 5,
+    backgroundColor: "#951FC0"
   },
   btntext: {
     textAlign: "center",
     fontSize: 20,
-    fontWeight: "600",
-    padding: 12,
-    backgroundColor: "gray",
-    color: "#f2f2f2"
+    backgroundColor: "#951FC0",
+    color: "black",
+    height: 40,
+    alignContent: "center",
+    paddingTop: 5
   }
 });

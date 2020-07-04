@@ -1,35 +1,41 @@
 import * as React from 'react'
-import { StyleSheet, View,Text,Image } from 'react-native'
+import { StyleSheet, View,Text,ImageBackground } from 'react-native'
 import moment from "moment";
+import { FontAwesome, Entypo } from "@expo/vector-icons";
 
-const SmallVidePreview = (props) => {
+
+const TracklistPreview = (props) => {
     return (
         <View style={styles.container}>
-            <Image source={{uri: props.episode.album.coverImage}} style={styles.image}>
-            </Image>
+            {/* <ImageBackground source={{uri: props.episode.poster}} style={styles.image}>
+                <Text ></Text>
+            </ImageBackground> */}
 
             <View style={styles.description}>
                 <Text style={{fontWeight: '200',color:"#fff"}}>
-                    {props.episode !== undefined ? props.episode.album.name:"blank"}
+                    {props.episode !== undefined ? props.episode.title:"blank"}
                 </Text>
-                {/* <View style={styles.poddetails}>
-                    <Text style={styles.nums}>{props.episode !== undefined ? props.episode.name:"blank"}</Text>
+                <View style={styles.poddetails}>
+                    <Text style={styles.nums}>{props.episode !== undefined ? props.episode.description:"blank"}</Text>
                     <Text style={{paddingVertical: 2,}}>
                     <Text style={styles.nums}> {props.episode.views} views </Text>
                     <Text> - </Text>
                     <Text style={styles.nums}>{moment(props.episode.date).format("DD MMM YYYY")} </Text> 
                 </Text>
-                </View> */}
+                </View>
+                
             </View>
-            {/* <Text style={styles.duration}>
-                45.59
-            </Text> */}
-            <View style={{borderBottomWidth: .7}}/>
+            <Text style={styles.duration}>
+            <FontAwesome
+              name={"play-circle-o"}
+              size={30}
+            />
+            </Text>
         </View>
     )
 }
 
-export default SmallVidePreview
+export default TracklistPreview
 
 const styles = StyleSheet.create({
     container: {
@@ -40,6 +46,7 @@ const styles = StyleSheet.create({
         height:75
     },
     image: {
+      resizeMode: "cover",
       justifyContent: "center",
       flex: 2
     },
@@ -62,7 +69,8 @@ const styles = StyleSheet.create({
         fontWeight: '100',
         fontSize: 15,
         alignSelf: 'center',
-        color:"#fff"
+        color:"#fff",
+        marginLeft: 15
     },
     poddetails: {
         fontWeight: '100',

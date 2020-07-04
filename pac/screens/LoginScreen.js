@@ -8,10 +8,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   AsyncStorage,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Image
 } from "react-native";
 
-const fnLogin = async (username, password, navigation) => {};
+import logo from "../assets/images/splash.png"
 
 const LoginScreen = ({ navigation }) => {
   const [email, onChangeEmail] = React.useState("");
@@ -61,7 +63,7 @@ const LoginScreen = ({ navigation }) => {
     } else {
       setTimeout(() => {
         setDisplay(true);
-      }, 3000);
+      }, 2000);
     }
   });
 
@@ -69,7 +71,8 @@ const LoginScreen = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       {display ? (
         <View style={styles.container}>
-          <Text style={styles.heading}>Sign In</Text>
+          <Image source={require('../assets/images/splash.png')} style={{resizeMode:"center", height:120, width: 200, alignSelf:"center"}}/>
+          <Text style={styles.heading}>LOGIN</Text>
 
           {loader ? (
             <View
@@ -86,7 +89,7 @@ const LoginScreen = ({ navigation }) => {
               />
             </View>
           ) : (
-            <View style={styles.loginform}>
+            <KeyboardAvoidingView style={styles.loginform}>
               <TextInput
                 style={styles.input}
                 autoCorrect={true}
@@ -116,42 +119,42 @@ const LoginScreen = ({ navigation }) => {
                   </Text>
                 </View>
               )}
-            </View>
+            </KeyboardAvoidingView>
           )}
           <TouchableOpacity
-            style={{ marginTop: 24 }}
+            style={{ marginTop: 15, borderRadius:5, borderWidth:2, borderColor:"#951FC0" }}
             onPress={() => _login(email, password)}
           >
             <View style={styles.btnlogin}>
-              <Text style={styles.btntext}>Sign In</Text>
+              <Text style={styles.btntext}>Login</Text>
             </View>
           </TouchableOpacity>
           <View
             style={{
               paddingTop: 18,
-              paddingLeft: 18,
               fontWeight: "300",
-              flexDirection: "row"
+              flexDirection: "row",
+              justifyContent:"center"
             }}
           >
-            <Text>Forgot password? </Text>
+            <Text style={{color:"#fff"}}>Forgot password? </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate("resetpassword")}
             >
-              <Text>Click Here</Text>
+              <Text style={{color:"#FE2851", marginLeft:5}}>Reset</Text>
             </TouchableOpacity>
           </View>
           <View
             style={{
               paddingTop: 18,
-              paddingLeft: 18,
               fontWeight: "300",
-              flexDirection: "row"
+              flexDirection: "row",
+              justifyContent: "center"
             }}
           >
-            <Text>Don't have an account? </Text>
+            <Text style={{color:"#fff", fontWeight:"100"}} >Don't have an account? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("register")}>
-              <Text>Sign Up</Text>
+              <Text style={{color:"#FE2851", marginLeft:5}}>Register</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -163,7 +166,7 @@ const LoginScreen = ({ navigation }) => {
             height: "100%"
           }}
         >
-          <ActivityIndicator animating={true} color="#bc2b78" size="large" />
+          <ActivityIndicator animating={true} color="#bc2b78" size="large" backgroundColor="#131212" />
         </View>
       )}
     </TouchableWithoutFeedback>
@@ -175,38 +178,42 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 140
+    paddingVertical: 50,
+    flex: 1,
+    backgroundColor:"#131212"
   },
   loginform: {
     paddingHorizontal: 12
   },
   heading: {
     textAlign: "center",
-    fontSize: 40,
+    fontSize: 20,
     fontWeight: "400",
-    paddingVertical: 8
+    paddingVertical: 8,
+    marginTop:60,
+    color:"#fff"
   },
   input: {
-    padding: 12,
-    height: 55,
-    borderColor: "lightgray",
-    borderWidth: 2,
-    fontSize: 24,
+    paddingLeft : 12,
+    height: 50,
+    backgroundColor:"#232524",
+    fontSize: 16,
     fontWeight: "200",
-    textAlignVertical: "center",
-    marginVertical: 4,
-    borderRadius: 5
+    marginVertical: 15,
+    borderRadius: 5,
+    color:"#fff"
   },
   btnlogin: {
-    borderWidth: 1,
-    borderRadius: 5
+    borderRadius: 5,
+    backgroundColor:"#951FC0"
   },
   btntext: {
     textAlign: "center",
     fontSize: 20,
-    fontWeight: "600",
-    padding: 12,
-    backgroundColor: "gray",
-    color: "#f2f2f2"
+    backgroundColor: "#951FC0",
+    color: "black",
+    height:40,
+    alignContent: "center",
+    paddingTop:5,
   }
 });

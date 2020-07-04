@@ -1,11 +1,13 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator,  } from '@react-navigation/bottom-tabs';
+
 import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import Profile from '../screens/Profile';
-import Notifications from '../screens/notification';
-import ExploreScreen from '../screens/ExploreScreen'
+import ExploreScreen from '../screens/ExploreScreen';
+import Search from '../components/searchbar/testSearch'
+
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -18,9 +20,15 @@ export default function BottomTabNavigator({ navigation, route }) {
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} 
         tabBarOptions={{
-          keyboardHidesTabBar: true
-
+          keyboardHidesTabBar: true,
+          activeTintColor: "#FE2851",
+          style:{
+            backgroundColor:"#232524",
+            
+          }
         }}
+
+    
       >
       <BottomTab.Screen
         name="Home"
@@ -30,11 +38,11 @@ export default function BottomTabNavigator({ navigation, route }) {
           
         }}
       />
-      <BottomTab.Screen
-        name="Explore"
-        component={ExploreScreen}
+      {/* <BottomTab.Screen
+        name="Search"
+        component={Search}
         options={{
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="play-circle" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="search" />,
         }}
         tab
       />
@@ -44,7 +52,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="user" />,
         }}
-      />
+      /> */}
     </BottomTab.Navigator>
   );
 }

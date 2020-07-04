@@ -10,6 +10,12 @@ import player from './components/players/player'
 import LoginScreen from './screens/LoginScreen'
 import Register from './screens/RegisterScreen'
 import ResetPassword from './screens/ForgotPassword'
+import Search from './components/searchbar/testSearch'
+import ExploreChannel from './screens/ExploreChannelScreen'
+import AllExploreChannel from './screens/ViewAllScreen'
+import albumExplore from './screens/exploreAlbum'
+
+
 
 const Stack = createStackNavigator();
 
@@ -29,6 +35,10 @@ export default function App(props) {
             <Stack.Screen name="register" component={Register} />
             <Stack.Screen name="player" component={player} />
             <Stack.Screen name="resetpassword" component={ResetPassword} />
+            <Stack.Screen name="search" component={Search} />
+            <Stack.Screen name="explore-channel" component={ExploreChannel} />
+            <Stack.Screen name="all-explore-channel" component={AllExploreChannel} />
+            <Stack.Screen name="explore-album" component={albumExplore} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>
@@ -39,6 +49,6 @@ export default function App(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#131212',
   },
 });
