@@ -14,6 +14,7 @@ import Search from './components/searchbar/testSearch'
 import ExploreChannel from './screens/ExploreChannelScreen'
 import AllExploreChannel from './screens/ViewAllScreen'
 import albumExplore from './screens/exploreAlbum'
+import catergoryResult from './components/catergoryresults/catergoryResults'
 
 
 
@@ -39,6 +40,7 @@ export default function App(props) {
             <Stack.Screen name="explore-channel" component={ExploreChannel} />
             <Stack.Screen name="all-explore-channel" component={AllExploreChannel} />
             <Stack.Screen name="explore-album" component={albumExplore} />
+            <Stack.Screen name="catergory-results" component={catergoryResult} />
           </Stack.Navigator>
         </NavigationContainer>
       </View>

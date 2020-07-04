@@ -12,11 +12,14 @@ const TracklistPreview = (props) => {
             </ImageBackground> */}
 
             <View style={styles.description}>
-                <Text style={{fontWeight: '200',color:"#fff"}}>
+                <Text numberOfLines={2}
+                    ellipsizeMode="tail"
+                    style={{fontWeight: '200',color:"#fff"}}>
                     {props.episode !== undefined ? props.episode.title:"blank"}
                 </Text>
                 <View style={styles.poddetails}>
-                    <Text style={styles.nums}>{props.episode !== undefined ? props.episode.description:"blank"}</Text>
+                    <Text numberOfLines={1}
+                        ellipsizeMode="tail" style={styles.nums}>{props.episode !== undefined ? props.episode.description:"blank"}</Text>
                     <Text style={{paddingVertical: 2,}}>
                     <Text style={styles.nums}> {props.episode.views} views </Text>
                     <Text> - </Text>

@@ -1,6 +1,6 @@
 import * as WebBrowser from "expo-web-browser";
 import * as React from "react";
-import { View, TouchableOpacity, Text, Image, Keyboard,TouchableWithoutFeedback, KeyboardAvoidingView, AsyncStorage, Alert } from "react-native";
+import { View, TouchableOpacity, Text, Image, StyleSheet,Modal, TouchableHighlight, AsyncStorage, ActivityIndicator,KeyboardAvoidingView } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import MyVideoPlayer from "./videoplayer";
@@ -8,7 +8,7 @@ import MyAudioPlayer from "./audioplayer";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import useForceUpdate from 'use-force-update';
 import Comment from "../comment/comment";
-import Next from "../SmallVideoPreview/SmallVideoPreview";
+import Next from "../SmallVideoPreview/TrackListPreview";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useKeepAwake } from 'expo-keep-awake';
@@ -27,6 +27,12 @@ const  player = ({route,navigation}) => {
   const [user, setUser] = React.useState(undefined);
   const [episodeLiked, setEpisodeLiked] = React.useState(false)
   const [episodeSaved, setEpisodeSaved] = React.useState(false)
+  const [playlistModal, setplaylistModal] = React.useState(false);
+  const [commentModal, setCommentModal] = React.useState(false);
+  const [downloading, setDownloading] = React.useState(false);
+
+
+
 
   React.useEffect(() => {
     if(episode.video === "none"){
@@ -35,26 +41,25 @@ const  player = ({route,navigation}) => {
   }, []);
 
   const downloadFile = () =>{
-    const uri = episode.video
-    let fileUri = FileSystem.documentDirectory + "myvid.mp4";
+    const uri = episode.audio
+    
+    let fileUri = FileSystem.documentDirectory + episode.title + ".mp3";
+    let downloads = []
+    AsyncStorage.getItem("downloads").then(value => {
+      if(value){
+        downloads = JSON.parse(value)
+      }
+    });
+
+    setDownloading(true)
+    
     FileSystem.downloadAsync(uri, fileUri)
     .then(({ uri }) => {
-        console.log(uri);
-        Alert.alert(
-          'Alert Title',
-          'My Alert Msg',
-          [
-            { text: `downloaded to ${uri} `, onPress: () => console.log('Ask me later pressed') },
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            { text: 'OK', onPress: () => console.log('OK Pressed') },
-          ],
-          { cancelable: false }
-        );
-
+      let downloaded = episode
+      downloaded.audio = uri
+      downloads.push(downloaded)
+      AsyncStorage.setItem("downloads", JSON.stringify(downloads));
+      setDownloading(false)
       })
       .catch(error => {
         console.error(error);
@@ -237,14 +242,13 @@ const  player = ({route,navigation}) => {
   useKeepAwake();
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={{ flex: 1, backgroundColor:"#131212" }}>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           marginHorizontal: 15,
-          marginTop: 40
+          marginTop: 40,
         }}
       >
         <TouchableOpacity
@@ -292,7 +296,9 @@ const  player = ({route,navigation}) => {
 
           : null
           }    
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>  navigation.navigate("Explore")}
+        >
           <FontAwesome
             name={"search"}
             size={30}
@@ -305,8 +311,8 @@ const  player = ({route,navigation}) => {
         <Image
           source={{uri:episode.poster}}
           style={{
-            width: 150,
-            height: 150,
+            width: "80%",
+            height: "40%",
             alignSelf: "center",
             marginTop: 20,
             resizeMode:"stretch"
@@ -320,88 +326,160 @@ const  player = ({route,navigation}) => {
           width: "100%",
           height: "100%",
           marginVertical: 15,
-          flex:  player === "video"? 0:0
+          flex:1
         }}
       >
-        {player === "video" ? <MyVideoPlayer video={episode.audio} /> : player === "audio" ? <MyAudioPlayer video={episode.audio} /> : null}
+        {player === "video" ? <MyVideoPlayer video={episode} /> : player === "audio" ? <MyAudioPlayer video={episode} /> : null}
         {hide? (
-          <View style={{ marginTop: 10, marginHorizontal: 10 }}>
-            <Text style={{ color: Colors.tabIconSelected, fontSize: 18 ,fontWeight:"400"}}>
-              {episode.title}
-            </Text>
-            <Text
-              style={{
-                marginTop: 5,
-                color: Colors.tabIconSelected,
-                fontSize: 12,
-                fontWeight:"400"
-              }}
-            >
-              {episode.views} Views
-            </Text>
+          <View style={{ flex: 3,position:"absolute", bottom:0, right:0,left:0 }}>
+       
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
-                marginHorizontal: 15,
-                marginTop: 15
+                marginHorizontal: "15%",
               }}
             >
-              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }} onPress={() => likeEpisode()}>
+               <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}
+               onPress={() => {
+                setplaylistModal(true);
+              }}
+               >
                 <FontAwesome
-                  name={"thumbs-up"}
-                  size={20}
-                  color={episodeLiked? "#FE2851": Colors.tabIconSelected}
-                />
-                <Text style={{fontWeight:"200", color:episodeLiked? "#FE2851": Colors.tabIconSelected}}>{episode.like}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}>
-                <FontAwesome
-                  name={"thumbs-down"}
-                  size={20}
+                  name={"list"}
+                  size={25}
                   color={Colors.tabIconSelected}
                 />
-                <Text style={{fontWeight:"200"}}>{episode.dislikes}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}>
-                <FontAwesome
-                  name={"share"}
-                  size={20}
-                  color={Colors.tabIconSelected}
-                />
-                <Text style={{fontWeight:"200"}}>Share</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>   
               <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }} onPress={() => downloadFile()}>
-                <FontAwesome
+                {
+                  downloading ?
+                  <ActivityIndicator
+                  style={{ marginLeft: 100 }}
+                  animating={true}
+                  color="#bc2b78"
+                  size="small"
+                />
+                  
+                  :
+                  <FontAwesome
                   name={"download"}
-                  size={20}
+                  size={25}
                   color={Colors.tabIconSelected}
                 />
-                <Text style={{fontWeight:"200"}}>Download</Text>
+                }
+                
               </TouchableOpacity>
               <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }} onPress={() => saveEpisode()}>
                 <FontAwesome
                   name={"plus"}
-                  size={20}
+                  size={25}
                   color={episodeSaved? "#FE2851": Colors.tabIconSelected}
                 />
-                <Text style={{fontWeight:"200", color:episodeSaved? "#FE2851": Colors.tabIconSelected}}>Save</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}
+                 onPress={() => {
+                  setCommentModal(true);
+                }}
+              >
+                <FontAwesome
+                  name={"comments"}
+                  size={25}
+                  color={Colors.tabIconSelected}
+                />
+              </TouchableOpacity>
+              
             </View>  
+
+            
            
           </View>
           
         ) : <View/>}
-        
-        <View
-          style={{
-            backgroundColor: Colors.tabIconSelected,
-            marginTop: player === "video"? 5 : 30,
-            flexGrow: 1,
-            flex: 1
-          }}
-        >
 
+        
+        {/* playlist modal */}
+        <Modal
+              animationType="slide"
+              transparent={true}
+              visible={playlistModal}
+              presentationStyle={"fullScreen"}
+              onRequestClose={() => {
+                setplaylistModal(!playlistModal)
+              }}
+            >
+              
+              <View style={styles.centeredView}>
+              <TouchableOpacity onPress={() => setplaylistModal(!playlistModal)} style={{width:40, alignSelf: "center", height:30}}>
+                <View
+                  style={{
+                    borderBottomColor: "white",
+                    borderBottomWidth: 5,
+                    alignSelf: "center",
+                    width: 30,
+                    paddingTop: 13,
+                    justifyContent:"center"
+                  }}
+                />
+              </TouchableOpacity>
+              <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: "5%", marginBottom:10, marginTop:30}}>
+              <View>
+               {episodes &&
+              episodes.map(e => (
+                <TouchableOpacity
+                  onPress={() => updateEpisode(e)}
+                  key={e.id}
+                >
+                  {e !== undefined || {} ? <Next episode={e} /> : null}
+                </TouchableOpacity>
+              ))}
+              </View>
+          </ScrollView>
+              </View>
+            </Modal>
+
+            {/* comments modal */}
+        <Modal
+              animationType="slide"
+              transparent={true}
+              visible={commentModal}
+              presentationStyle={"fullScreen"}
+              onRequestClose={() => {
+                setCommentModal(!commentModal)
+              }}
+            >
+              
+              <View style={styles.centeredView}>
+              <TouchableOpacity onPress={() => setCommentModal(!commentModal)} style={{width:40, alignSelf: "center", height:30}}>
+                <View
+                  style={{
+                    borderBottomColor: "white",
+                    borderBottomWidth: 5,
+                    alignSelf: "center",
+                    width: 30,
+                    paddingTop: 13,
+                    justifyContent:"center"
+                  }}
+                />
+              </TouchableOpacity>
+              <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: "5%", marginBottom:10, marginTop:30}}>
+              <View>
+               {episodes &&
+              episodes.map(e => (
+                <View>
+                {comments &&
+               comments.reverse().map(e => (
+                 <TouchableOpacity
+                 key={e.id}
+                 >
+                   <Comment
+                   comment={e}></Comment>
+                 </TouchableOpacity>
+               ))}
+               </View>
+              ))}
+              </View>
+          </ScrollView>
           <KeyboardAvoidingView>
           <View style={{
                borderColor: Colors.tabIconSelected,
@@ -430,84 +508,52 @@ const  player = ({route,navigation}) => {
                
           </View> 
           </KeyboardAvoidingView>
-
-          <TouchableOpacity onPress={() => setHide(!hide)} style={{width:40, alignSelf: "center", height:30}}>
-            <View
-              style={{
-                borderBottomColor: "white",
-                borderBottomWidth: 5,
-                alignSelf: "center",
-                width: 30,
-                paddingTop: 13,
-                justifyContent:"center"
-              }}
-            />
-          </TouchableOpacity>
-
-          <View
-            style={{
-              justifyContent: "center",
-              flexDirection: "row",
-              marginTop: 25
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                width: "40%",
-                height: 30,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: component === "next" ? "white" : "teal"
-              }}
-              onPress={() => setcomponent("next")}
-            >
-              <Text>Up Next</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                width: "40%",
-                height: 30,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: component === "comment" ? "white" : "teal"
-              }}
-              onPress={() =>getComments()}
-            >
-              <Text>Comments</Text>
-            </TouchableOpacity>
-          </View>
-          <ScrollView showsVerticalScrollIndicator={false} style={{ marginHorizontal: "5%", marginBottom:100}}>
-            {component === "comment" ? (
-              <View>
-              {comments &&
-             comments.reverse().map(e => (
-               <TouchableOpacity
-               key={e.id}
-               >
-                 <Comment
-                 comment={e}></Comment>
-               </TouchableOpacity>
-             ))}
-             </View>
-            ) : (
-              <View>
-               {episodes &&
-              episodes.map(e => (
-                <TouchableOpacity
-                  onPress={() => updateEpisode(e)}
-                  key={e.id}
-                >
-                  {e !== undefined || {} ? <Next episode={e} /> : null}
-                </TouchableOpacity>
-              ))}
               </View>
-            )}
-          </ScrollView>
-        </View>
+            </Modal>
       </View>
     </View>
-    </TouchableWithoutFeedback>
   );
 };
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    height:"100%",
+    backgroundColor:"black",
+    opacity:.95,
+    marginTop:30
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
+});
+
 
 export default player;

@@ -37,6 +37,7 @@ const LoginScreen = ({ navigation }) => {
       .then(result => {
         if (typeof result === "object") {
           AsyncStorage.setItem("user", JSON.stringify(result));
+          AsyncStorage.setItem("downloads", JSON.stringify([]));
           setTimeout(() => {
             setLoader(false);
             navigation.navigate("Root", result);

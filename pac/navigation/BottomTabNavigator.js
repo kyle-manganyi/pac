@@ -4,9 +4,8 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import Profile from '../screens/Profile';
-import ExploreScreen from '../screens/ExploreScreen';
-import Search from '../components/searchbar/testSearch'
+import DownloadsScreen from '../screens/downloadsScreen';
+import Search from '../components/searchbar/searchbar'
 
 
 const BottomTab = createBottomTabNavigator();
@@ -27,8 +26,6 @@ export default function BottomTabNavigator({ navigation, route }) {
             
           }
         }}
-
-    
       >
       <BottomTab.Screen
         name="Home"
@@ -38,21 +35,21 @@ export default function BottomTabNavigator({ navigation, route }) {
           
         }}
       />
-      {/* <BottomTab.Screen
-        name="Search"
+      <BottomTab.Screen
+        name="Explore"
         component={Search}
         options={{
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="search" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="rocket" />,
         }}
         tab
       />
       <BottomTab.Screen
-        name="Profile"
-        component={Profile}
+        name="downloads"
+        component={DownloadsScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="user" />,
+          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="download" />,
         }}
-      /> */}
+      />
     </BottomTab.Navigator>
   );
 }

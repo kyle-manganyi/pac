@@ -149,8 +149,8 @@ export default class App extends React.Component {
       throughEarpiece: false,
       PLAYLIST : [
         new PlaylistItem(
-          "Popeye - I don't scare",
-          this.props.video,
+          this.props.video.title,
+          this.props.video.audio,
           false
         )
       ]
@@ -174,18 +174,27 @@ export default class App extends React.Component {
       });
       this.setState({ fontLoaded: true });
     })();
+    this._loadNewPlaybackInstance(true);
+
+  }
+
+  componentWillUnmount(){
+    if (this.playbackInstance != null) {
+      this.playbackInstance.unloadAsync();
+    }
+
   }
 
   async _loadNewPlaybackInstance(playing) {
     if (this.playbackInstance != null) {
       await this.playbackInstance.unloadAsync();
-      // this.playbackInstance.setOnPlaybackStatusUpdate(null);
+      this.playbackInstance.setOnPlaybackStatusUpdate(null);
       this.playbackInstance = null;
     }
 
     const source = { uri: this.state.PLAYLIST[this.index].uri };
     const initialStatus = {
-      shouldPlay: playing,
+      shouldPlay: true,
       rate: this.state.rate,
       shouldCorrectPitch: this.state.shouldCorrectPitch,
       volume: this.state.volume,
@@ -441,7 +450,7 @@ export default class App extends React.Component {
     ) {
       return `${this._getMMSSFromMillis(
         this.state.playbackInstancePosition
-      )} / ${this._getMMSSFromMillis(this.state.playbackInstanceDuration)}`;
+      )}`;
     }
     return "";
   }
@@ -486,7 +495,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <View style={styles.videoContainer}>
           <Video
-            ref={this._mountVideo}
+            //ref={this._mountVideo}
             style={[
               styles.video,
               {
@@ -507,12 +516,17 @@ export default class App extends React.Component {
           />
             
         </View>
+        <View style={{marginVertical:20, alignItems:"center", marginHorizontal:"5%"}}>
+          <Text style={{color:"#fff", fontSize:15, textAlign:"center"}}>{this.props.video.title}</Text>
+          <Text style={{color:"#fff", fontSize:15, opacity:.5, marginTop:5,  textAlign:"center"}}>{this.props.video.description}</Text>
+        </View>
         <View
             style={[
               styles.buttonsContainerBase,
               styles.buttonsContainerTopRow,
               {
-                opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0
+                opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0,
+                marginTop:10,
               }
             ]}
           >
@@ -532,19 +546,19 @@ export default class App extends React.Component {
             >
                <View>
                 <Text
-                  style={[styles.text, { fontFamily: "cutive-mono-regular" }]}
+                  style={[styles.text, { fontFamily: "cutive-mono-regular"}]}
                 >
                   {this.state.isPlaying ? (
                     <FontAwesome
-                      name={"pause"}
-                      size={30}
-                      color={"black"}
+                      name={"pause-circle-o"}
+                      size={70}
+                      color={"#FE2851"}
                     />
                   ) : (
                     <FontAwesome
-                      name={"play"}
-                      size={30}
-                      color={"black"}
+                      name={"play-circle-o"}
+                      size={70}
+                      color={"#fff"}
                     />
                   )}
                 </Text>
@@ -566,40 +580,25 @@ export default class App extends React.Component {
           style={[
             styles.playbackContainer,
             {
-              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0
+              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0,
+              marginTop: 15
             }
           ]}
         >
           <Slider
             style={styles.playbackSlider}
-            trackImage={ICON_TRACK_1.module}
-            thumbImage={ICON_THUMB_1.module}
+            minimumTrackTintColor={"#FE2851"}
+            maximumTrackTintColor={"#fff"}
+            thumbTintColor={"#fff"}
             value={this._getSeekSliderPosition()}
             onValueChange={this._onSeekSliderValueChange}
             onSlidingComplete={this._onSeekSliderSlidingComplete}
             disabled={this.state.isLoading}
           />
-          <View style={styles.timestampRow}>
-            <Text
-              style={[
-                styles.text,
-                styles.buffering,
-                { fontFamily: "cutive-mono-regular" }
-              ]}
-            >
-              {this.state.isBuffering ? BUFFERING_STRING : ""}
-            </Text>
-            <Text
-              style={[
-                styles.text,
-                styles.timestamp,
-                { fontFamily: "cutive-mono-regular" }
-              ]}
-            >
-              {this._getTimestamp()}
-            </Text>
+          <View style={{flexDirection:"row", justifyContent:"space-between", width:"100%"}}>
+          <Text style={{color:"#fff"}}>{this._getMMSSFromMillis(this.state.playbackInstancePosition)}</Text>
+          <Text style={{color:"#fff"}}>{this._getMMSSFromMillis(this.state.playbackInstanceDuration)}</Text>
           </View>
-          
         </View>
       </View>
     );
@@ -639,10 +638,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
     minHeight: ICON_THUMB_1.height * 2.0,
-    maxHeight: ICON_THUMB_1.height * 2.0
+    maxHeight: ICON_THUMB_1.height * 2.0,
+    marginHorizontal:20
   },
   playbackSlider: {
-    alignSelf: "stretch"
+    alignSelf: "stretch",
   },
   timestampRow: {
     flexDirection: "row",
@@ -673,7 +673,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   buttonsContainerTopRow: {
-    maxHeight: ICON_PLAY_BUTTON.height,
     minWidth: DEVICE_WIDTH / 2.0,
     maxWidth: DEVICE_WIDTH / 2.0
   },

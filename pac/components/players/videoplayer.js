@@ -22,8 +22,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 console.disableYellowBox = true;
 
-
-
 class Icon {
   constructor(module, width, height) {
     this.module = module;
@@ -95,7 +93,7 @@ const ICON_UNMUTED_BUTTON = new Icon(
 const ICON_TRACK_1 = new Icon(
   require("../../assets/images/track_1.png"),
   166,
-  5,
+  5
 );
 const ICON_THUMB_1 = new Icon(
   require("../../assets/images/thumb_1.png"),
@@ -119,7 +117,7 @@ const FONT_SIZE = 14;
 const LOADING_STRING = "... loading ...";
 const BUFFERING_STRING = "...buffering...";
 const RATE_SCALE = 3.0;
-const VIDEO_CONTAINER_HEIGHT = (DEVICE_HEIGHT * 0.3)
+const VIDEO_CONTAINER_HEIGHT = DEVICE_HEIGHT * 0.3;
 
 export default class App extends React.Component {
   constructor(props) {
@@ -150,12 +148,8 @@ export default class App extends React.Component {
       fullscreen: false,
       throughEarpiece: false,
       showControls: true,
-      PLAYLIST : [
-        new PlaylistItem(
-          "Popeye - I don't scare",
-          this.props.video,
-          true
-        )
+      PLAYLIST: [
+        new PlaylistItem("Popeye - I don't scare", this.props.video.audio, true)
       ]
     };
   }
@@ -177,6 +171,13 @@ export default class App extends React.Component {
       });
       this.setState({ fontLoaded: true });
     })();
+    this._loadNewPlaybackInstance(true);
+  }
+
+  componentWillUnmount() {
+    if (this.playbackInstance != null) {
+      this.playbackInstance.unloadAsync();
+    }
   }
 
   async _loadNewPlaybackInstance(playing) {
@@ -188,7 +189,7 @@ export default class App extends React.Component {
 
     const source = { uri: this.state.PLAYLIST[this.index].uri };
     const initialStatus = {
-      shouldPlay: playing,
+      shouldPlay: true,
       rate: this.state.rate,
       shouldCorrectPitch: this.state.shouldCorrectPitch,
       volume: this.state.volume,
@@ -303,7 +304,8 @@ export default class App extends React.Component {
 
   _advanceIndex(forward) {
     this.index =
-      (this.index + (forward ? 1 : this.state.PLAYLIST.length - 1)) % this.state.PLAYLIST.length;
+      (this.index + (forward ? 1 : this.state.PLAYLIST.length - 1)) %
+      this.state.PLAYLIST.length;
   }
 
   async _updatePlaybackInstanceForIndex(playing) {
@@ -323,7 +325,7 @@ export default class App extends React.Component {
         this.playbackInstance.pauseAsync();
       } else {
         this.playbackInstance.playAsync();
-        this._onControls()
+        this._onControls();
       }
     }
   };
@@ -336,15 +338,15 @@ export default class App extends React.Component {
 
   _onForwardPressed = () => {
     if (this.playbackInstance != null) {
-      this._advanceIndex(true);
-      this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
+      // this._advanceIndex(true);
+      // this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
     }
   };
 
   _onBackPressed = () => {
     if (this.playbackInstance != null) {
-      this._advanceIndex(false);
-      this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
+      // this._advanceIndex(false);
+      // this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
     }
   };
 
@@ -453,7 +455,7 @@ export default class App extends React.Component {
   };
 
   _onUseNativeControlsPressed = () => {
-    this.setState({ useNativeControls: !this.state.useNativeControls });
+    this.setState({ useNativeControls: false });
   };
 
   _onFullscreenPressed = () => {
@@ -464,155 +466,152 @@ export default class App extends React.Component {
     }
   };
 
-  _onControls =() => {
-    this.setState({showControls:true})
-    setTimeout( () => {
-        this.setState({showControls:false})
-     },5000);
-  }
-
+  _onControls = () => {
+    this.setState({ showControls: true });
+    setTimeout(() => {
+      this.setState({ showControls: false });
+    }, 5000);
+  };
 
   render() {
     return !this.state.fontLoaded ? (
       <View style={styles.emptyContainer} />
     ) : (
       <View style={styles.container}>
-          <TouchableWithoutFeedback onPress={() =>this._onControls()}>
-        <View style={styles.videoContainer}>
-          <Video
-            ref={this._mountVideo}
-            style={[
-              styles.video,
-              {
-                opacity: this.state.showVideo ? 1.0 : 0.0,
-                width: DEVICE_WIDTH,
-                height: this.state.videoHeight
-              }
-            ]}
-            resizeMode={Video.RESIZE_MODE_CONTAIN}
-            onPlaybackStatusUpdate={this._onPlaybackStatusUpdate}
-            onLoadStart={this._onLoadStart}
-            onLoad={this._onLoad}
-            onError={this._onError}
-            onFullscreenUpdate={this._onFullscreenUpdate}
-            onReadyForDisplay={this._onReadyForDisplay}
-            useNativeControls={this.state.useNativeControls}
-            onTouchStart={() =>this._onControls()}
-          />
-        </View>
+        <TouchableWithoutFeedback onPress={this._onFullscreenPressed}>
+          <View style={styles.videoContainer}>
+            <Video
+              ref={this._mountVideo}
+              style={[
+                styles.video,
+                {
+                  opacity: this.state.showVideo ? 1.0 : 0.0,
+                  width: DEVICE_WIDTH,
+                  height: this.state.videoHeight
+                }
+              ]}
+              resizeMode={Video.RESIZE_MODE_CONTAIN}
+              onPlaybackStatusUpdate={this._onPlaybackStatusUpdate}
+              onLoadStart={this._onLoadStart}
+              onLoad={this._onLoad}
+              onError={this._onError}
+              onFullscreenUpdate={this._onFullscreenUpdate}
+              onReadyForDisplay={this._onReadyForDisplay}
+              useNativeControls={this.state.useNativeControls}
+              onTouchStart={() => this._onControls()}
+            />
+          </View>
         </TouchableWithoutFeedback>
-        {
-            this.state.showControls ? 
-          <View
-            style={[
-              styles.buttonsContainerBase,
-              styles.buttonsContainerTopRow,
-              {
-                opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0
-              }
-            ]}
+
+        <View
+          style={{
+            marginVertical: 20,
+            alignItems: "center",
+            marginHorizontal: "5%"
+          }}
+        >
+          <Text style={{ color: "#fff", fontSize: 15, textAlign: "center" }}>
+            {this.props.video.title}
+          </Text>
+          <Text
+            style={{
+              color: "#fff",
+              fontSize: 15,
+              opacity: 0.5,
+              marginTop: 5,
+              textAlign: "center"
+            }}
           >
-            <TouchableHighlight
-              style={styles.wrapper}
-              onPress={this._onPlayPausePressed}
-              disabled={this.state.isLoading}
-            >
-              <View>
-                <Text
-                  style={[styles.text, { fontFamily: "cutive-mono-regular" }]}
-                >
-                  {this.state.isPlaying ? (
-                    <FontAwesome
-                      name={"pause"}
-                      size={30}
-                      color={"#fff"}
-                      style={{ marginTop: 7 }}
-                    />
-                  ) : (
-                    <FontAwesome
-                      name={"play"}
-                      size={30}
-                      color={"#fff"}
-                    />
-                  )}
-                </Text>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.wrapper}
-              onPress={this._onStopPressed}
-              disabled={this.state.isLoading}
-            >
-              <View>
-                <Text
-                  style={[styles.text, { fontFamily: "cutive-mono-regular" }]}
-                >
+            {this.props.video.description}
+          </Text>
+        </View>
+        <View
+          style={[
+            styles.buttonsContainerBase,
+            styles.buttonsContainerTopRow,
+            {
+              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0,
+              marginTop: 10
+            }
+          ]}
+        >
+          <TouchableHighlight
+            underlayColor={BACKGROUND_COLOR}
+            style={styles.wrapper}
+            onPress={this._onBackPressed}
+            disabled={this.state.isLoading}
+          >
+            <FontAwesome name={"fast-backward"} size={30} color={"#fff"} />
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor={BACKGROUND_COLOR}
+            style={styles.wrapper}
+            onPress={this._onPlayPausePressed}
+            disabled={this.state.isLoading}
+          >
+            <View>
+              <Text
+                style={[styles.text, { fontFamily: "cutive-mono-regular" }]}
+              >
+                {this.state.isPlaying ? (
                   <FontAwesome
-                    name={"stop"}
-                    size={30}
+                    name={"pause-circle-o"}
+                    size={70}
+                    color={"#FE2851"}
+                  />
+                ) : (
+                  <FontAwesome
+                    name={"play-circle-o"}
+                    size={70}
                     color={"#fff"}
                   />
-                </Text>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.wrapper}
-              onPress={this._onFullscreenPressed}
-            >
-              <View>
-                <Text
-                  style={[styles.text, { fontFamily: "cutive-mono-regular" }]}
-                >
-                  <FontAwesome
-                    name={"arrows-alt"}
-                    size={30}
-                    color={"#fff"}
-                  />
-                </Text>
-              </View>
-            </TouchableHighlight>
-          </View>:null
-        }
-        {this.state.showControls ? <View
+                )}
+              </Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor={BACKGROUND_COLOR}
+            style={styles.wrapper}
+            onPress={this._onForwardPressed}
+            disabled={this.state.isLoading}
+          >
+            <FontAwesome name={"fast-forward"} size={30} color={"#fff"} />
+          </TouchableHighlight>
+        </View>
+        <View
           style={[
             styles.playbackContainer,
             {
-              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0
+              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0,
+              marginTop: 15
             }
           ]}
         >
           <Slider
             style={styles.playbackSlider}
-            trackImage={ICON_TRACK_1.module}
-            thumbImage={ICON_THUMB_1.module}
+            minimumTrackTintColor={"#FE2851"}
+            maximumTrackTintColor={"#fff"}
+            thumbTintColor={"#fff"}
             value={this._getSeekSliderPosition()}
             onValueChange={this._onSeekSliderValueChange}
             onSlidingComplete={this._onSeekSliderSlidingComplete}
             disabled={this.state.isLoading}
           />
-          <View style={styles.timestampRow}>
-            <Text
-              style={[
-                styles.text,
-                styles.buffering,
-                { fontFamily: "cutive-mono-regular" }
-              ]}
-            >
-              {this.state.isBuffering ? BUFFERING_STRING : ""}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%"
+            }}
+          >
+            <Text style={{ color: "#fff" }}>
+              {this._getMMSSFromMillis(this.state.playbackInstancePosition)}
             </Text>
-            <Text
-              style={[
-                styles.text,
-                styles.timestamp,
-                { fontFamily: "cutive-mono-regular", fontWeight:"900" },
-              ]}
-            >
-              {this._getTimestamp()}
+            <Text style={{ color: "#fff" }}>
+              {this._getMMSSFromMillis(this.state.playbackInstanceDuration)}
             </Text>
           </View>
-        </View> : <TouchableHighlight onPress={() =>this._onControls()}>
-          <View style={{height:this.state.videoHeight, width: this.state.videoWidth}}></View>
-          </TouchableHighlight>}
+        </View>
       </View>
     );
   }
@@ -625,13 +624,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    maxHeight: "30%",
-    justifyContent: "space-between",
     alignItems: "center",
     alignSelf: "stretch",
-    backgroundColor: "black"
+    backgroundColor: "#131212",
+    flexDirection: "column"
   },
-  wrapper: {},
   nameContainer: {
     height: FONT_SIZE
   },
@@ -639,10 +636,11 @@ const styles = StyleSheet.create({
     height: FONT_SIZE
   },
   videoContainer: {
-    height: "30%"
+    height: "40%"
   },
   video: {
-    maxWidth: DEVICE_WIDTH
+    maxWidth: DEVICE_WIDTH,
+    width: "80%"
   },
   playbackContainer: {
     flex: 1,
@@ -652,11 +650,11 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     minHeight: ICON_THUMB_1.height * 2.0,
     maxHeight: ICON_THUMB_1.height * 2.0,
-    paddingBottom: 50
+    marginHorizontal: 20
   },
   playbackSlider: {
     alignSelf: "stretch",
-    color:"#fff",
+    color: "#fff",
     marginTop: 0,
     marginBottom: 0
   },
@@ -667,13 +665,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignSelf: "stretch",
     minHeight: FONT_SIZE,
-    color:"#fff",
-    paddingBottom:5
+    color: "#fff",
+    paddingBottom: 5
   },
   text: {
     fontSize: FONT_SIZE,
     minHeight: FONT_SIZE,
-    color:"#fff"
+    color: "#fff"
   },
   buffering: {
     textAlign: "left",
@@ -689,10 +687,9 @@ const styles = StyleSheet.create({
   buttonsContainerBase: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   buttonsContainerTopRow: {
-    maxHeight: 30,
     minWidth: DEVICE_WIDTH / 2.0,
     maxWidth: DEVICE_WIDTH / 2.0
   }

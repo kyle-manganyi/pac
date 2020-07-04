@@ -112,7 +112,7 @@ export default function HomeScreen({ navigation, route }) {
           }}
         />
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home", { update: true })}
+          // onPress={() => navigation.navigate("Home", { update: true })}
           style={{ height: 100, justifyContent: "center", marginRight: 15 }}
         >
           <FontAwesome
@@ -160,11 +160,11 @@ export default function HomeScreen({ navigation, route }) {
                 Featured
               </Text>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("all-explore-channel", {
-                  episodes: episodes
-                })
-              }
+              // onPress={() =>
+              //   navigation.navigate("all-explore-channel", {
+              //     episodes: episodes
+              //   })
+              // }
             >
               <Text
                 style={{
@@ -203,7 +203,7 @@ export default function HomeScreen({ navigation, route }) {
             )}
           </ScrollView>
 
-          {watchedEpisodes.length === 0 ? null : (
+          {/* {watchedEpisodes.length === 0 ? null : (
             <View>
               <View
                 style={{
@@ -333,7 +333,7 @@ export default function HomeScreen({ navigation, route }) {
                 )}
               </ScrollView>
             </View>
-          )}
+          )} */}
         </ScrollView>
       </View>
     </View>

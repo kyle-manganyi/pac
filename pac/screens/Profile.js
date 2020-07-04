@@ -14,16 +14,30 @@ import { FontAwesome, Entypo } from "@expo/vector-icons";
 const profile = ({navigation}) => {
 
   const [user, setUser] = React.useState(undefined);
-  AsyncStorage.getItem('user').then(
-    value =>{
-      if(value){
-        setUser(JSON.parse(value))
-      }
-    }
-  );
+  const [downloads, setdownloads] = React.useState(undefined);
+
+  // AsyncStorage.getItem('user').then(
+  //   value =>{
+  //     if(value){
+  //       setUser(JSON.parse(value))
+  //     }
+  //   }
+  // );
+
+  // AsyncStorage.getItem('downloads').then(
+  //   value =>{
+  //     if(value){
+  //       setdownloads(JSON.parse(value))
+  //     }
+  //   }
+  // );
+
+  // console.log(downloads)
 
   const _logout= () =>{
     AsyncStorage.removeItem("user")
+    AsyncStorage.removeItem("downloads")
+
     navigation.navigate('login')
   }
  
