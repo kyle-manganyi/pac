@@ -5,12 +5,12 @@ import moment from "moment";
 const SmallVidePreview = (props) => {
     return (
         <View style={styles.container}>
-            <Image source={{uri: props.episode.album.coverImage}} style={styles.image}>
+            <Image source={{uri: props.episode.album !== undefined? props.episode.album.coverImage : props.episode.coverImage}} style={styles.image}>
             </Image>
 
             <View style={styles.description}>
                 <Text style={{fontWeight: '200',color:"#fff"}}>
-                    {props.episode !== undefined ? props.episode.album.name:"blank"}
+                    {props.episode.album !== undefined ? props.episode.album.name:props.episode.name}
                 </Text>
                 {/* <View style={styles.poddetails}>
                     <Text style={styles.nums}>{props.episode !== undefined ? props.episode.name:"blank"}</Text>

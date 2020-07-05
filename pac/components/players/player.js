@@ -5,7 +5,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import MyVideoPlayer from "./videoplayer";
 import MyAudioPlayer from "./audioplayer";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { ScrollView, TextInput, TouchableWithoutFeedback } from "react-native-gesture-handler";
 import useForceUpdate from 'use-force-update';
 import Comment from "../comment/comment";
 import Next from "../SmallVideoPreview/TrackListPreview";
@@ -30,40 +30,54 @@ const  player = ({route,navigation}) => {
   const [playlistModal, setplaylistModal] = React.useState(false);
   const [commentModal, setCommentModal] = React.useState(false);
   const [downloading, setDownloading] = React.useState(false);
-
-
-
+  const [downloadingFail, setDownloadingFail] = React.useState(false);
+  const [index, setIndex] = React.useState(route.params.index);
 
   React.useEffect(() => {
+    navigation.addListener("focus", () => {
+      setEpisode(route.params.episde)
+    });
     if(episode.video === "none"){
       setPlayer("audio")
     }   
   }, []);
 
   const downloadFile = () =>{
-    const uri = episode.audio
-    
-    let fileUri = FileSystem.documentDirectory + episode.title + ".mp3";
-    let downloads = []
-    AsyncStorage.getItem("downloads").then(value => {
+
+    AsyncStorage.getItem("Playing").then(value => {
       if(value){
-        downloads = JSON.parse(value)
+        let playing = episodes[JSON.parse(value)]
+        const uri = playing.audio
+
+        var n = playing.audio.lastIndexOf('/');
+        var result = playing.audio.substring(n + 1);
+        
+        let fileUri = FileSystem.documentDirectory + result;
+        let downloads = []
+        AsyncStorage.getItem("downloads").then(value => {
+          if(value){
+            downloads = JSON.parse(value)
+          }
+        });
+
+        setDownloading(true)
+        
+        FileSystem.downloadAsync(uri, fileUri)
+        .then(({ uri }) => {
+          let downloaded = playing
+          downloaded.audio = uri
+          downloads.push(downloaded)
+          AsyncStorage.setItem("downloads", JSON.stringify(downloads));
+          setDownloading(false)
+          })
+          .catch(error => {
+            setDownloadingFail(true)
+            setDownloading(false)
+            console.error(error);
+          })
       }
     });
-
-    setDownloading(true)
     
-    FileSystem.downloadAsync(uri, fileUri)
-    .then(({ uri }) => {
-      let downloaded = episode
-      downloaded.audio = uri
-      downloads.push(downloaded)
-      AsyncStorage.setItem("downloads", JSON.stringify(downloads));
-      setDownloading(false)
-      })
-      .catch(error => {
-        console.error(error);
-      })
   }
 
   
@@ -72,86 +86,87 @@ const  player = ({route,navigation}) => {
       value =>{
         if(value){
           setUser(JSON.parse(value))
-          checkLiked(JSON.parse(value))
-          watchEpisode(JSON.parse(value))
-          checksaved(JSON.parse(value))
+          // checkLiked(JSON.parse(value))
+          // watchEpisode(JSON.parse(value))
+          // checksaved(JSON.parse(value))
         }
       }
     );
-    viewEpisode()
+    // viewEpisode()
   }, []);
 
-  const checkLiked = (user) => {
-    fetch(`https://kpopapi.herokuapp.com/api/episode/user-liked-episode?episode=${episode.id}&userid=${user.id}`, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(result => {
-        setEpisodeLiked(result)
-      })
-      .catch(err => {
-      });
-  }
+  // const checkLiked = (user) => {
+  //   fetch(`https://kpopapi.herokuapp.com/api/episode/user-liked-episode?episode=${episode.id}&userid=${user.id}`, {
+  //     method: "POST",
+  //     mode: "cors",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     }
+  //   })
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       setEpisodeLiked(result)
+  //     })
+  //     .catch(err => {
+  //     });
+  // }
 
-  const checksaved = (user) => {
-    fetch(`https://kpopapi.herokuapp.com/api/episode/user-saved-episode?episode=${episode.id}&userid=${user.id}`, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(result => {
-        setEpisodeSaved(result)
-      })
-      .catch(err => {
-      });
-  }
+  // const checksaved = (user) => {
+  //   fetch(`https://kpopapi.herokuapp.com/api/episode/user-saved-episode?episode=${episode.id}&userid=${user.id}`, {
+  //     method: "POST",
+  //     mode: "cors",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     }
+  //   })
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       setEpisodeSaved(result)
+  //     })
+  //     .catch(err => {
+  //     });
+  // }
 
-  const watchEpisode = (user) => {
-    fetch(`https://kpopapi.herokuapp.com/api/episode/watch?EpisodeID=${episode.id}&userid=${user.id}`, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(result => {
-        console.log("done")
-      })
-      .catch(err => {
-        console.log("done")
-      });
-  }
+  // const watchEpisode = (user) => {
+  //   fetch(`https://kpopapi.herokuapp.com/api/episode/watch?EpisodeID=${episode.id}&userid=${user.id}`, {
+  //     method: "POST",
+  //     mode: "cors",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     }
+  //   })
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       console.log("done")
+  //     })
+  //     .catch(err => {
+  //       console.log("done")
+  //     });
+  // }
 
-  const saveEpisode = () => {
-    setEpisodeSaved(!episodeSaved)
-    fetch(`https://kpopapi.herokuapp.com/api/episode/save?EpisodeID=${episode.id}&userid=${user.id}`, {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(result => {
-        console.log(result)
-        console.log("done")
-      })
-      .catch(err => {
-        console.log("done")
-      });
+  // const saveEpisode = () => {
+  //   setEpisodeSaved(!episodeSaved)
+  //   fetch(`https://kpopapi.herokuapp.com/api/episode/save?EpisodeID=${episode.id}&userid=${user.id}`, {
+  //     method: "POST",
+  //     mode: "cors",
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     }
+  //   })
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       console.log(result)
+  //       console.log("done")
+  //     })
+  //     .catch(err => {
+  //       console.log("done")
+  //     });
 
-  }
+  // }
 
   const updateEpisode = (newepisode) => {
     setEpisode(newepisode)
+    setIndex(episodes.indexOf(newepisode))
     setPlayer("")
     setTimeout( () => {
       setPlayer(player)
@@ -329,7 +344,7 @@ const  player = ({route,navigation}) => {
           flex:1
         }}
       >
-        {player === "video" ? <MyVideoPlayer video={episode} /> : player === "audio" ? <MyAudioPlayer video={episode} /> : null}
+        {player === "video" ? <MyVideoPlayer playlist={episodes} index={index} /> : player === "audio" ? <MyAudioPlayer playlist={episodes} index={index}/> : null}
         {hide? (
           <View style={{ flex: 3,position:"absolute", bottom:0, right:0,left:0 }}>
        
@@ -355,7 +370,6 @@ const  player = ({route,navigation}) => {
                 {
                   downloading ?
                   <ActivityIndicator
-                  style={{ marginLeft: 100 }}
                   animating={true}
                   color="#bc2b78"
                   size="small"
@@ -370,29 +384,25 @@ const  player = ({route,navigation}) => {
                 }
                 
               </TouchableOpacity>
-              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }} onPress={() => saveEpisode()}>
+              {/* <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }} onPress={() => saveEpisode()}>
                 <FontAwesome
                   name={"plus"}
                   size={25}
                   color={episodeSaved? "#FE2851": Colors.tabIconSelected}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}
-                 onPress={() => {
-                  setCommentModal(true);
-                }}
+                //  onPress={() => {
+                //   setCommentModal(true);
+                // }}
               >
                 <FontAwesome
-                  name={"comments"}
+                  name={"heart"}
                   size={25}
                   color={Colors.tabIconSelected}
                 />
-              </TouchableOpacity>
-              
-            </View>  
-
-            
-           
+              </TouchableOpacity>    
+            </View>       
           </View>
           
         ) : <View/>}
@@ -508,6 +518,23 @@ const  player = ({route,navigation}) => {
                
           </View> 
           </KeyboardAvoidingView>
+              </View>
+            </Modal>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={downloadingFail}
+              presentationStyle={"fullScreen"}
+              onRequestClose={() => {
+                setDownloadingFail(false)
+              }}
+            >              <View>
+                <Text>download failed</Text>
+                <TouchableOpacity
+                onPress={() => setDownloadingFail(false)}
+                >
+                  <Text>close</Text>
+                </TouchableOpacity>
               </View>
             </Modal>
       </View>

@@ -16,6 +16,13 @@ const profile = ({navigation}) => {
   const [user, setUser] = React.useState(undefined);
   const [downloads, setdownloads] = React.useState(undefined);
 
+  React.useEffect(() => {
+    navigation.addListener('focus', () => {
+      console.log("componentDidMount");
+    });
+    
+  }, []);
+
   // AsyncStorage.getItem('user').then(
   //   value =>{
   //     if(value){

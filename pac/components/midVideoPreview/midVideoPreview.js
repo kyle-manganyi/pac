@@ -7,7 +7,7 @@ import moment from "moment";
 
 const midvideoPreview = props => {
   return (
-    <View style={{width:150, alignItems:"center"}}>
+    <View style={{width:130, alignItems:"center"}}>
       <ImageBackground
         source={{ uri: props.episode.coverImage }}
         style={{

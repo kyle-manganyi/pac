@@ -11,7 +11,8 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View
+  View,
+  AsyncStorage
 } from "react-native";
 import { Asset } from "expo-asset";
 import { Audio, Video } from "expo-av";
@@ -31,10 +32,11 @@ class Icon {
 }
 
 class PlaylistItem {
-  constructor(name, uri, isVideo) {
+  constructor(name, uri, isVideo, artist) {
     this.name = name;
     this.uri = uri;
     this.isVideo = isVideo;
+    this.artist = artist
   }
 }
 
@@ -122,7 +124,7 @@ const VIDEO_CONTAINER_HEIGHT = (DEVICE_HEIGHT * 2.0) / 5.0 - FONT_SIZE * 2;
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.index = 0;
+    this.index = this.props.index;
     this.isSeeking = false;
     this.shouldPlayAtEndOfSeek = false;
     this.playbackInstance = null;
@@ -147,17 +149,23 @@ export default class App extends React.Component {
       useNativeControls: false,
       fullscreen: false,
       throughEarpiece: false,
-      PLAYLIST : [
-        new PlaylistItem(
-          this.props.video.title,
-          this.props.video.audio,
-          false
-        )
-      ]
+      PLAYLIST : []
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    let temp = [];
+     await this.props.playlist.forEach(element => {
+        temp.push(new PlaylistItem(element.title,element.audio,false,element.artist)
+        )      
+    });
+    this.setState({PLAYLIST: temp})
+    if(temp.length > 0 ){
+      this._loadNewPlaybackInstance(true);
+    }
+
+    AsyncStorage.setItem("Playing", JSON.stringify(this.index));
+
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       staysActiveInBackground: true,
@@ -174,7 +182,6 @@ export default class App extends React.Component {
       });
       this.setState({ fontLoaded: true });
     })();
-    this._loadNewPlaybackInstance(true);
 
   }
 
@@ -262,8 +269,8 @@ export default class App extends React.Component {
       });
       if (status.didJustFinish && !status.isLooping) {
         // play next when in a play list will implement later
-        // this._advanceIndex(true);
-        // this._updatePlaybackInstanceForIndex(true);
+        this._advanceIndex(true);
+        this._updatePlaybackInstanceForIndex(true);
       }
     } else {
       if (status.error) {
@@ -312,6 +319,7 @@ export default class App extends React.Component {
   _advanceIndex(forward) {
     this.index =
       (this.index + (forward ? 1 : this.state.PLAYLIST.length - 1)) % this.state.PLAYLIST.length;
+      AsyncStorage.setItem("Playing", JSON.stringify(this.index));
   }
 
   async _updatePlaybackInstanceForIndex(playing) {
@@ -517,8 +525,8 @@ export default class App extends React.Component {
             
         </View>
         <View style={{marginVertical:20, alignItems:"center", marginHorizontal:"5%"}}>
-          <Text style={{color:"#fff", fontSize:15, textAlign:"center"}}>{this.props.video.title}</Text>
-          <Text style={{color:"#fff", fontSize:15, opacity:.5, marginTop:5,  textAlign:"center"}}>{this.props.video.description}</Text>
+          <Text style={{color:"#fff", fontSize:15, textAlign:"center"}}>{this.state.PLAYLIST[this.index].name}</Text>
+          <Text style={{color:"#fff", fontSize:15, opacity:.5, marginTop:5,  textAlign:"center"}}>{this.state.PLAYLIST[this.index].artist}</Text>
         </View>
         <View
             style={[
@@ -616,7 +624,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "stretch",
     backgroundColor: BACKGROUND_COLOR,
-    maxHeight: 150
   },
   wrapper: {},
   nameContainer: {

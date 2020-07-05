@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/Cellar/yarn/1.22.0/libexec/bin/yarn.js add @expo/vector-icons/Fontisto
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.22.0/libexec/bin/yarn.js add @react-navigation/drawer
 
 PATH: 
   /usr/local/opt/gettext/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/usr/local/opt/gettext/bin:/Users/kylemanganyi/Library/Android/sdk/emulator:/Users/kylemanganyi/Library/Android/sdk/tools:/Users/kylemanganyi/Library/Android/sdk/tools/bin:/Users/kylemanganyi/Library/Android/sdk/platform-tools:/Users/kylemanganyi/Library/Android/sdk/emulator:/Users/kylemanganyi/Library/Android/sdk/tools:/Users/kylemanganyi/Library/Android/sdk/tools/bin:/Users/kylemanganyi/Library/Android/sdk/platform-tools
@@ -14,17 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@expo%2fvector-icons/Fontisto: Request "https://registry.yarnpkg.com/@expo%2fvector-icons/Fontisto" returned a 405
-      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:66984:18)
-      at Request.self.callback (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:140727:22)
-      at Request.emit (events.js:310:20)
-      at Request.<anonymous> (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:141699:10)
-      at Request.emit (events.js:310:20)
-      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:141621:12)
-      at Object.onceWrapper (events.js:416:28)
-      at IncomingMessage.emit (events.js:322:22)
-      at endReadableNT (_stream_readable.js:1187:12)
-      at processTicksAndRejections (internal/process/task_queues.js:84:21)
+  Error: EACCES: permission denied, unlink '/Users/kylemanganyi/Desktop/podcast and chill/pacTest/pac/pac/node_modules/@types/prop-types/README.md'
 
 npm manifest: 
   {
@@ -41,7 +31,7 @@ npm manifest:
       "preset": "jest-expo"
     },
     "dependencies": {
-      "@expo/vector-icons": "~10.0.6",
+      "@expo/vector-icons": "10.1.0",
       "@react-native-community/masked-view": "0.1.6",
       "@react-navigation/bottom-tabs": "^5.3.1",
       "@react-navigation/native": "^5.2.1",
@@ -50,6 +40,7 @@ npm manifest:
       "expo-asset": "~8.1.0",
       "expo-av": "~8.1.0",
       "expo-constants": "~9.0.0",
+      "expo-file-system": "~8.1.0",
       "expo-font": "~8.1.0",
       "expo-keep-awake": "~8.1.0",
       "expo-linking": "^1.0.1",
@@ -1097,17 +1088,17 @@ Lockfile:
       util.promisify "^1.0.0"
       write-file-atomic "^2.3.0"
   
+  "@expo/vector-icons@10.1.0":
+    version "10.1.0"
+    resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.1.0.tgz#3fb2517924b031c1b98f86fa51a2032a257759b0"
+    integrity sha512-6ikFslHORJgsb8wKeSgXYfZNNXsiTb3yQf5xaNyGUCYg4zqE7VchdhnH9yZKTI3Lu16jna52pHQZl+3jcOSAbQ==
+    dependencies:
+      lodash "^4.17.4"
+  
   "@expo/vector-icons@^10.0.2":
     version "10.2.0"
     resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.2.0.tgz#3c70656683a6a873e18efc00bc61fc160a80dc55"
     integrity sha512-dYe0SW/xbzWRtWG7i1pc3QPMGMbdReVgP02XlwMkS4srAAjF0cZQVa3ZgZ6qzxI+OzKudpDXZRmENNth/b263g==
-    dependencies:
-      lodash "^4.17.4"
-  
-  "@expo/vector-icons@~10.0.6":
-    version "10.0.6"
-    resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-10.0.6.tgz#5718953ff0b97827d11dae5787976fa8ce5caaed"
-    integrity sha512-qNlKPNdf073LpeEpyClxAh0D3mmIK4TGAQzeKR0HVwf14RIEe17+mLW5Z6Ka5Ho/lUtKMRPDHumSllFyKvpeGg==
     dependencies:
       lodash "^4.17.4"
   

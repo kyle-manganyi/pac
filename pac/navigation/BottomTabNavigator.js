@@ -4,7 +4,8 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import DownloadsScreen from '../screens/downloadsScreen';
+import downloadsScreen from '../screens/downloadsScreen';
+import player from '../components/players/player';
 import Search from '../components/searchbar/searchbar'
 
 
@@ -44,8 +45,8 @@ export default function BottomTabNavigator({ navigation, route }) {
         tab
       />
       <BottomTab.Screen
-        name="downloads"
-        component={DownloadsScreen}
+        name="Downloads"
+        component={downloadsScreen}
         options={{
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="download" />,
         }}

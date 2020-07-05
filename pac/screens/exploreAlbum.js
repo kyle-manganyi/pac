@@ -83,12 +83,13 @@ import {
               <ScrollView>
                 <View style={{ marginTop: 10 }}>
                   {episode.content &&
-                    episode.content.map(e => (
+                    episode.content.map((e, index) => (
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate("player", {
                             episde: e,
-                            episodes: episode.content
+                            episodes: episode.content,
+                            index: index
                           })
                         }
                         key={e.id}

@@ -15,11 +15,14 @@ import {
   
   const catergoryResult = ({ route, navigation }) => {
     const [episodes, setEpisodes] = React.useState([]);
-    const catergoryID = route.params.catergoryID;
 
 
     React.useEffect(() => {
-        fetch(`https://kpopapi.herokuapp.com/api/ContentCreater/catergory-content?catergoryID=${catergoryID}`, {
+        if(route.params.content !== undefined){
+          setEpisodes(route.params.content)
+        }
+        else{
+          fetch(`https://kpopapi.herokuapp.com/api/ContentCreater/catergory-content?catergoryID=${route.params.catergoryID}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
@@ -30,9 +33,11 @@ import {
           .catch(err => {
             return console.log("not now  " + err);
           });
+
+        }
+        
       }, []);
 
-      console.log(episodes)
   
     return (
       <View style={{flex:1, backgroundColor:"#131212"}}>
@@ -64,12 +69,13 @@ import {
               <ScrollView>
                 <View style={{ marginTop: 10 }}>
                   {episodes &&
-                    episodes.map(e => (
+                    episodes.map((e, index) => (
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate("player", {
                             episde: e,
-                            episodes: episodes
+                            episodes: episodes,
+                            index:index
                           })
                         }
                         key={e.id}

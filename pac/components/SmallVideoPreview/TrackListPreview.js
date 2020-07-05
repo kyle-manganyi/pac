@@ -19,7 +19,7 @@ const TracklistPreview = (props) => {
                 </Text>
                 <View style={styles.poddetails}>
                     <Text numberOfLines={1}
-                        ellipsizeMode="tail" style={styles.nums}>{props.episode !== undefined ? props.episode.description:"blank"}</Text>
+                        ellipsizeMode="tail" style={styles.nums}>{props.episode !== undefined ? props.episode.artist:"blank"}</Text>
                     <Text style={{paddingVertical: 2,}}>
                     <Text style={styles.nums}> {props.episode.views} views </Text>
                     <Text> - </Text>

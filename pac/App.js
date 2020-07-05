@@ -29,7 +29,7 @@ export default function App(props) {
     return (
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
-        <NavigationContainer linking={LinkingConfiguration} ini>
+        <NavigationContainer>
           <Stack.Navigator initialRouteName={"login"} screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Root" component={BottomTabNavigator} />
             <Stack.Screen name="login" component={LoginScreen} />
