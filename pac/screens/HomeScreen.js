@@ -25,18 +25,7 @@ export default function HomeScreen({ navigation, route }) {
   const [ContentCreator, SetContentCreator] = React.useState()
 
   React.useEffect(() => {
-    fetch(`https://kpopapi.herokuapp.com/api/episode`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => res.json())
-      .then(result => setEpisodes(result))
-      .catch(err => {
-        return console.log("not now  " + err);
-      });
-
+  
       fetch(`https://kpopapi.herokuapp.com/api/ContentCreater/get-creators`, {
       method: "GET",
       headers: {
@@ -48,13 +37,13 @@ export default function HomeScreen({ navigation, route }) {
       .catch(err => {
         return console.log("not now  " + err);
       });
-    AsyncStorage.getItem("user").then(value => {
-      if (value) {
-        setUser(JSON.parse(value));
-        getWatched(JSON.parse(value));
-        getSaved(JSON.parse(value));
-      }
-    });
+    // AsyncStorage.getItem("user").then(value => {
+    //   if (value) {
+    //     setUser(JSON.parse(value));
+    //     getWatched(JSON.parse(value));
+    //     getSaved(JSON.parse(value));
+    //   }
+    // });
   }, []);
 
   getWatched = user => {
@@ -111,7 +100,7 @@ export default function HomeScreen({ navigation, route }) {
             width: 200
           }}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           // onPress={() => navigation.navigate("Home", { update: true })}
           style={{ height: 100, justifyContent: "center", marginRight: 15 }}
         >
@@ -120,23 +109,12 @@ export default function HomeScreen({ navigation, route }) {
             size={40}
             color={Colors.tabIconSelected}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={{ flex: 1, marginBottom: 20, marginTop: 10 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
        
-            <View>
-              <Text
-                style={{
-                  color: Colors.tabIconSelected,
-                  fontSize: 18,
-                  marginHorizontal: "5%",
-                  marginBottom:15
-                }}
-              >
-                Discover
-              </Text>
-            </View>
+      
 
             <Carousel />
 
@@ -159,7 +137,7 @@ export default function HomeScreen({ navigation, route }) {
               >
                 Featured
               </Text>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               // onPress={() =>
               //   navigation.navigate("all-explore-channel", {
               //     episodes: episodes
@@ -176,11 +154,11 @@ export default function HomeScreen({ navigation, route }) {
               size={18}
               color="#FE2851"
             /></Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginBottom:5}}>
             {ContentCreator ? (
-              ContentCreator.map(e => (
+              ContentCreator.slice(0, 5).map(e => (
                 <TouchableOpacity
                   style={{ marginHorizontal: 10, marginTop:5 }}
                   key={e.id}

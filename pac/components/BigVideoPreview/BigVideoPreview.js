@@ -42,7 +42,7 @@ const BigVideoPreview = props => {
           <Text style={styles.nums}>
             {props.episode !== undefined ? props.episode.title : "blank"}
           </Text>
-          <Text style={styles.nums}>{props.episode.views} views  </Text>
+          <Text style={styles.nums}>{props.episode.views} streamz  </Text>
           <Text style={styles.nums}> {moment(props.episode.date).format("DD MMM YYYY")} </Text>
         </View>
       </View>

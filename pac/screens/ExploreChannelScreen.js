@@ -33,8 +33,6 @@ const ExploreChannelScreen = ({ route, navigation }) => {
       
   }, []);
 
-  console.log(albums)
-
   return (
     <View style={{flex:1, backgroundColor:"#131212"}}>
       {episode === null ? null : (
@@ -67,7 +65,7 @@ const ExploreChannelScreen = ({ route, navigation }) => {
             <Text style={{ fontSize: 30, color: "#FFF", opacity: 0.3, textAlign:"center" }}>
               {episode.name}
             </Text>
-
+{/* 
             <TouchableOpacity
               style={{
                 borderRadius: 20,
@@ -79,7 +77,7 @@ const ExploreChannelScreen = ({ route, navigation }) => {
               }}
             >
               <Text style={{ fontSize: 18, color: "#fff" }}>Subscribe</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <View
               style={{ borderBottomColor: "#FE2851", borderBottomWidth: 1 }}
             />

@@ -166,6 +166,20 @@ export default class App extends React.Component {
 
     AsyncStorage.setItem("Playing", JSON.stringify(this.index));
 
+    fetch(`https://kpopapi.herokuapp.com/api/ContentCreater/stream?contentID=${this.props.playlist[this.index].id}`, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => {
+        console.log(result)
+      })
+      .catch(err => {
+      });
+
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
       staysActiveInBackground: true,
@@ -529,61 +543,55 @@ export default class App extends React.Component {
           <Text style={{color:"#fff", fontSize:15, opacity:.5, marginTop:5,  textAlign:"center"}}>{this.state.PLAYLIST[this.index].artist}</Text>
         </View>
         <View
-            style={[
-              styles.buttonsContainerBase,
-              styles.buttonsContainerTopRow,
-              {
-                opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0,
-                marginTop:10,
-              }
-            ]}
+          style={[
+            styles.buttonsContainerBase,
+            styles.buttonsContainerTopRow,
+            {
+              opacity: this.state.isLoading ? DISABLED_OPACITY : 1.0,
+              marginTop: 10
+            }
+          ]}
+        >
+          <TouchableHighlight
+            style={styles.wrapper}
+            onPress={this._onBackPressed}
+            disabled={this.state.isLoading}
           >
-            <TouchableHighlight
-              underlayColor={BACKGROUND_COLOR}
-              style={styles.wrapper}
-              onPress={this._onBackPressed}
-              disabled={this.state.isLoading}
-            >
-              <Image style={styles.button} source={ICON_BACK_BUTTON.module} />
-            </TouchableHighlight>
-            <TouchableHighlight
-              underlayColor={BACKGROUND_COLOR}
-              style={styles.wrapper}
-              onPress={this._onPlayPausePressed}
-              disabled={this.state.isLoading}
-            >
-               <View>
-                <Text
-                  style={[styles.text, { fontFamily: "cutive-mono-regular"}]}
-                >
-                  {this.state.isPlaying ? (
-                    <FontAwesome
-                      name={"pause-circle-o"}
-                      size={70}
-                      color={"#FE2851"}
-                    />
-                  ) : (
-                    <FontAwesome
-                      name={"play-circle-o"}
-                      size={70}
-                      color={"#fff"}
-                    />
-                  )}
-                </Text>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-              underlayColor={BACKGROUND_COLOR}
-              style={styles.wrapper}
-              onPress={this._onForwardPressed}
-              disabled={this.state.isLoading}
-            >
-              <Image
-                style={styles.button}
-                source={ICON_FORWARD_BUTTON.module}
-              />
-            </TouchableHighlight>
-          </View>
+            <FontAwesome name={"backward"} size={30} color={"#fff"} />
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles.wrapper}
+            onPress={this._onPlayPausePressed}
+            disabled={this.state.isLoading}
+          >
+            <View>
+              <Text
+                style={[styles.text, { fontFamily: "cutive-mono-regular" }]}
+              >
+                {this.state.isPlaying ? (
+                  <FontAwesome
+                    name={"pause-circle-o"}
+                    size={70}
+                    color={"#FE2851"}
+                  />
+                ) : (
+                  <FontAwesome
+                    name={"play-circle-o"}
+                    size={70}
+                    color={"#fff"}
+                  />
+                )}
+              </Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight
+            style={styles.wrapper}
+            onPress={this._onForwardPressed}
+            disabled={this.state.isLoading}
+          >
+            <FontAwesome name={"forward"} size={30} color={"#fff"} />
+          </TouchableHighlight>
+        </View>
         <View
           style={[
             styles.playbackContainer,

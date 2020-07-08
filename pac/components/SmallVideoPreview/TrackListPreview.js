@@ -21,7 +21,7 @@ const TracklistPreview = (props) => {
                     <Text numberOfLines={1}
                         ellipsizeMode="tail" style={styles.nums}>{props.episode !== undefined ? props.episode.artist:"blank"}</Text>
                     <Text style={{paddingVertical: 2,}}>
-                    <Text style={styles.nums}> {props.episode.views} views </Text>
+                    <Text style={styles.nums}> {props.episode.views} Streamz </Text>
                     <Text> - </Text>
                     <Text style={styles.nums}>{moment(props.episode.date).format("DD MMM YYYY")} </Text> 
                 </Text>

@@ -1,5 +1,6 @@
 import React, {useRef, useState, useEffect} from 'react';
 import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
+import * as Linking from 'expo-linking';
 import {
   View,
   Text,
@@ -11,20 +12,13 @@ import {
 
 const ENTRIES1 = [
   {
-    illustration: 'https://i.imgur.com/UYiroysl.jpg',
+    illustration: 'https://streamz-storage.s3.af-south-1.amazonaws.com/streamz/WhatsApp+Image+2020-07-07+at+11.48.28+AM.jpeg',
+    url: "https://astoundworx.weebly.com/"
   },
   {
-    illustration: 'https://i.imgur.com/UPrs1EWl.jpg',
-  },
-  {
-    illustration: 'https://i.imgur.com/MABUbpDl.jpg',
-  },
-  {
-    illustration: 'https://i.imgur.com/KZsmUi2l.jpg',
-  },
-  {
-    illustration: 'https://i.imgur.com/2nCt3Sbl.jpg',
-  },
+    illustration: 'https://streamz-storage.s3.af-south-1.amazonaws.com/streamz/WhiteLogo.jpg',
+    url: "http://workboxx.co.za/"
+  }
 ];
 const {width: screenWidth, height: screenHeight} = Dimensions.get('window');
 
@@ -32,9 +26,6 @@ const MyCarousel = props => {
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
 
-  const goForward = () => {
-    carouselRef.current.snapToNext();
-  };
 
   useEffect(() => {
     setEntries(ENTRIES1);
@@ -42,7 +33,9 @@ const MyCarousel = props => {
 
   const renderItem = ({item, index}, parallaxProps) => {
     return (
-      <View style={styles.item}>
+      <TouchableOpacity 
+      onPress={() =>     Linking.openURL(item.url).catch(err => console.error("Couldn't load page", err))}
+      style={styles.item}>
         <ParallaxImage
           source={{uri: item.illustration}}
           containerStyle={styles.imageContainer}
@@ -50,10 +43,7 @@ const MyCarousel = props => {
           parallaxFactor={0.4}
           {...parallaxProps}
         />
-        <Text style={styles.title} numberOfLines={2}>
-          {item.title}
-        </Text>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -90,6 +80,6 @@ const styles = StyleSheet.create({
   },
   image: {
     ...StyleSheet.absoluteFillObject,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
 });

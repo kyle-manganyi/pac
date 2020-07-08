@@ -58,6 +58,7 @@ const  player = ({route,navigation}) => {
           if(value){
             downloads = JSON.parse(value)
           }
+  
         });
 
         setDownloading(true)
@@ -82,6 +83,7 @@ const  player = ({route,navigation}) => {
 
   
   React.useEffect(() => {
+
     AsyncStorage.getItem('user').then(
       value =>{
         if(value){
@@ -286,26 +288,23 @@ const  player = ({route,navigation}) => {
               width: 75,
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: Colors.tabIconSelected
+              borderBottomColor: "#FE2851", borderBottomWidth: player === "video" ? 3 : 0
+
             }}
             onPress={() => setPlayer("video")}
           >
-            <FontAwesome name={"video-camera"} size={20} color={"#ffff"} />
+            <Text style={{color:"#fff"}}>Video</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setPlayer("audio")}
             style={{
-              backgroundColor: "#ffff",
               width: 75,
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
+              borderBottomColor: "#FE2851", borderBottomWidth: player === "audio" ? 3 : 0
             }}
           >
-            <FontAwesome
-              name={"music"}
-              size={20}
-              color={Colors.tabIconSelected}
-            />
+              <Text style={{color:"#fff"}}>Audio</Text>
           </TouchableOpacity>
           </View>
 
@@ -391,7 +390,7 @@ const  player = ({route,navigation}) => {
                   color={episodeSaved? "#FE2851": Colors.tabIconSelected}
                 />
               </TouchableOpacity> */}
-              <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}
+              {/* <TouchableOpacity style={{ justifyContent: "center", alignItems: "center" }}
                 //  onPress={() => {
                 //   setCommentModal(true);
                 // }}
@@ -401,7 +400,7 @@ const  player = ({route,navigation}) => {
                   size={25}
                   color={Colors.tabIconSelected}
                 />
-              </TouchableOpacity>    
+              </TouchableOpacity>     */}
             </View>       
           </View>
           
@@ -450,6 +449,7 @@ const  player = ({route,navigation}) => {
 
             {/* comments modal */}
         <Modal
+              animated={true}
               animationType="slide"
               transparent={true}
               visible={commentModal}
@@ -467,7 +467,6 @@ const  player = ({route,navigation}) => {
                     borderBottomWidth: 5,
                     alignSelf: "center",
                     width: 30,
-                    paddingTop: 13,
                     justifyContent:"center"
                   }}
                 />
@@ -548,7 +547,9 @@ const styles = StyleSheet.create({
     height:"100%",
     backgroundColor:"black",
     opacity:.95,
-    marginTop:30
+    marginTop:"20%",
+    borderTopRightRadius:30,
+    borderTopLeftRadius:30
   },
   modalView: {
     margin: 20,

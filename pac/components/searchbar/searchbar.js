@@ -20,10 +20,24 @@ import AlbumPreview from "../SmallVideoPreview/SmallVideoPreview";
 const Searchbar = ({navigation}) => {
   const [value, setValue] = React.useState("");
   const [searching, setSearching] = React.useState(false);
+  const [playlist, setPlaylist] = React.useState(true);
   const [Categories, setCatergories] = React.useState([]);
+  const [Artists, SetArtiists] = React.useState([]);
   const [searchResults, setSearchResult] = React.useState([]);
 
   React.useEffect(() => {
+    fetch(`https://kpopapi.herokuapp.com/api/ContentCreater/get-creators`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(result => SetArtiists(result))
+      .catch(err => {
+        return console.log("not now  " + err);
+      });
+
     fetch(`https://kpopapi.herokuapp.com/api/ContentCreater/get-catergories`, {
       method: "GET",
       headers: {
@@ -103,8 +117,56 @@ const Searchbar = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         )}
+        <View
+                style={{ borderBottomColor: "#FE2851", borderBottomWidth: 1, marginTop:5 }}
+              />
 
+
+          {
+            !searching ? 
+            <View style={{justifyContent:"center", flexDirection:"row", marginTop:20, marginHorizontal:"10%"}}>
+            <TouchableOpacity
+              style={{width:"30%"}}
+              onPress= {() => setPlaylist(true)}
+              >
+              
+                <Text style={{color:"#fff", textAlign:"center",paddingTop: playlist? 0 : 10, fontSize: playlist? 20 : 15}}>
+                  Playlists
+                </Text>
+                {
+                  playlist ? 
+                  <View
+                style={{ borderBottomColor: "#FE2851", borderBottomWidth: 3, marginTop:5,}}
+              />:null
+                }
+                
+             
+              </TouchableOpacity>
+              <TouchableOpacity
+                            style={{width:"30%"}}
+                            onPress= {() => setPlaylist(false)}
+
+
+              >
+            
+                <Text style={{color:"#fff", textAlign:"center", paddingTop: playlist? 10 : 0,  fontSize: playlist? 15 : 20}}>
+                  Artists
+                </Text>
+                {
+                  !playlist ? 
+                  <View
+                style={{ borderBottomColor: "#FE2851", borderBottomWidth: 3, marginTop:5,}}
+              />:null
+                }
+               
+              </TouchableOpacity>
+            </View>
+            :null    
+          }
+       
         {searching ? 
+
+        
         searchResults.length === 0? null:
         <ScrollView>
           {
@@ -294,25 +356,11 @@ const Searchbar = ({navigation}) => {
         
         
         : (
-          <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginHorizontal: "5%",
-                marginVertical: 15
-              }}
-            >
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: 18
-                }}
-              >
-                Playlists
-              </Text>
-            </View>
-            <ScrollView>
+          <View style={{marginTop:20}}>
+
+            {
+              playlist?
+              <ScrollView style={{marginBottom:50}}>
               <View style={styles.container}>
                   {
                       Categories.map(catergory => (
@@ -333,7 +381,31 @@ const Searchbar = ({navigation}) => {
                       ))
                   }
               </View>
-            </ScrollView>
+            </ScrollView>: 
+            <ScrollView style={{marginBottom:130}}>
+            <View style={styles.container}>
+                {
+                    Artists.map(e => (
+                      <TouchableOpacity
+                      style={{ marginHorizontal: 10, marginTop:5 }}
+                      key={e.id}
+                      onPress={() =>
+                        navigation.navigate("explore-channel", {
+                          episde: e
+                        })
+                      }
+                    >
+                      {e !== undefined || {} ? <Preview episode={e} /> : null}
+                    </TouchableOpacity>
+
+                    ))
+                }
+            </View>
+          </ScrollView>
+            
+            }
+            
+           
           </View>
         )}
       </View>

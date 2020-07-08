@@ -30,7 +30,7 @@ export default function App(props) {
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
         <NavigationContainer>
-          <Stack.Navigator initialRouteName={"login"} screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName={"Root"} screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Root" component={BottomTabNavigator} />
             <Stack.Screen name="login" component={LoginScreen} />
             <Stack.Screen name="register" component={Register} />

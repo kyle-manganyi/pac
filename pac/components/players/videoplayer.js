@@ -531,15 +531,13 @@ export default class App extends React.Component {
           ]}
         >
           <TouchableHighlight
-            underlayColor={BACKGROUND_COLOR}
             style={styles.wrapper}
             onPress={this._onBackPressed}
             disabled={this.state.isLoading}
           >
-            <FontAwesome name={"fast-backward"} size={30} color={"#fff"} />
+            <FontAwesome name={"backward"} size={30} color={"#fff"} />
           </TouchableHighlight>
           <TouchableHighlight
-            underlayColor={BACKGROUND_COLOR}
             style={styles.wrapper}
             onPress={this._onPlayPausePressed}
             disabled={this.state.isLoading}
@@ -565,12 +563,11 @@ export default class App extends React.Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
-            underlayColor={BACKGROUND_COLOR}
             style={styles.wrapper}
             onPress={this._onForwardPressed}
             disabled={this.state.isLoading}
           >
-            <FontAwesome name={"fast-forward"} size={30} color={"#fff"} />
+            <FontAwesome name={"forward"} size={30} color={"#fff"} />
           </TouchableHighlight>
         </View>
         <View

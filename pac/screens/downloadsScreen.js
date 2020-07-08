@@ -27,7 +27,6 @@ const catergoryResult = ({ navigation }) => {
     });
   }, []);
 
-  console.log(episodes)
 
   return (
     <View style={{flex:1, backgroundColor:"#131212"}}>
@@ -49,7 +48,7 @@ const catergoryResult = ({ navigation }) => {
             width: 200
           }}
         />
-        <TouchableOpacity
+        {/* <TouchableOpacity
           // onPress={() => navigation.navigate("Home", { update: true })}
           style={{ height: 100, justifyContent: "center", marginRight: 15 }}
         >
@@ -58,7 +57,7 @@ const catergoryResult = ({ navigation }) => {
             size={40}
             color={Colors.tabIconSelected}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     
       <View style={styles.bottomSection}>
