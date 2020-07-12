@@ -9,7 +9,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/Streamz.png",
     "scheme": "myapp",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -23,6 +23,8 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.bos.Streamz",
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "infoPlist": {
         "UIBackgroundModes": [

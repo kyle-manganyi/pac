@@ -387,7 +387,7 @@ const Searchbar = ({navigation}) => {
                 {
                     Artists.map(e => (
                       <TouchableOpacity
-                      style={{ marginHorizontal: 10, marginTop:5 }}
+                      style={{ marginTop:5 }}
                       key={e.id}
                       onPress={() =>
                         navigation.navigate("explore-channel", {
@@ -427,7 +427,8 @@ const styles = StyleSheet.create({
     opacity: 0.2
   },
   container: {
-    flex: 3,
+    justifyContent:"center",
+    // alignItems:"center",
     marginLeft: 10,
     marginRight: 10,
     flexDirection: "row",
