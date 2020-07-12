@@ -20,6 +20,7 @@ import * as Font from "expo-font";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
+
 console.disableYellowBox = true;
 
 class Icon {
@@ -165,6 +166,7 @@ export default class App extends React.Component {
     }
 
     AsyncStorage.setItem("Playing", JSON.stringify(this.index));
+   
 
     fetch(`https://kpopapi.herokuapp.com/api/ContentCreater/stream?contentID=${this.props.playlist[this.index].id}`, {
       method: "POST",
@@ -179,6 +181,8 @@ export default class App extends React.Component {
       })
       .catch(err => {
       });
+
+ 
 
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -203,7 +207,6 @@ export default class App extends React.Component {
     if (this.playbackInstance != null) {
       this.playbackInstance.unloadAsync();
     }
-
   }
 
   async _loadNewPlaybackInstance(playing) {
